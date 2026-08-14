@@ -3,8 +3,8 @@ status: IDLE
 active_phase: "Phase 1 Completed & Shipped (v2.0 Released)"
 active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "1e64691"
-last_test_status: "PASS (All DoD Requirements Met)"
+last_commit: "85e1eba"
+last_test_status: "PASS (All 15 System Files Saved & Verified)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.0 Fully Shipped (`1e64691`)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.0 Saved & Committed (`85e1eba`)
 
 ---
 
@@ -38,12 +38,7 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Eurus Quiz Master v2.0 Release (`/ship`)
-- **Status:** IDLE (Phase 1 & 4 Enhancements 100% Shipped).
-- **Spec Checksum:** `38A6CCF90CFA5BD6AD3C4B869A59BD02D88EE6E72D3F982AC1BA44E178DF4213`
-- **Git Release Commit:** [`1e64691`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **Features Shipped in v2.0:**
-  1. Configurable quiz timer duration selector (5 to 90 mins).
-  2. Modal "⭐ Lưu Bài Kiểm Tra Này" action.
-  3. 4th Navbar view "⭐ Bài Kiểm Tra Đã Lưu" with revision re-take functionality.
-  4. Compulsory correct answer explanations for all questions in history review.
+### Session 2026-08-14 — Final Save Teardown (`/save`)
+- **Status:** IDLE (All Web Features Saved & Verified).
+- **Git Commit:** [`85e1eba`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **All 15 Files Integrity Verified & Saved.**

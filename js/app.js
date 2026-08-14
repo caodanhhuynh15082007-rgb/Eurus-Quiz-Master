@@ -8,7 +8,8 @@ class App {
       txtParser: window.txtParserService,
       quizEngine: window.quizEngineService,
       history: window.historyService,
-      saved: window.savedService
+      saved: window.savedService,
+      feedback: window.feedbackService
     };
 
     this.views = {

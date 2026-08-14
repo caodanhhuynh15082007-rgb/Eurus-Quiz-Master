@@ -467,6 +467,44 @@ Lời giải: HTML là ngôn ngữ đánh dấu siêu văn bản." oninput="app.
     </div>
   </div>
 
+  <!-- Question Error Report / Feedback Modal Overlay -->
+  <div class="modal-overlay" id="feedback-modal">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <div>
+          <h2 style="font-size: 1.2rem; font-family: var(--font-heading);">🚩 Báo Cáo Lỗi / Góp Ý Câu Hỏi</h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="fb-question-preview">Nội dung câu hỏi...</span>
+        </div>
+        <button class="btn btn-secondary btn-icon-only" onclick="app.views.history.closeFeedbackModal()" style="padding: 0.4rem 0.8rem; font-size: 1.2rem;">✖</button>
+      </div>
+      <div class="modal-body">
+        <form id="feedback-form" onsubmit="app.views.history.submitFeedback(event)">
+          <input type="hidden" id="fb-question-id">
+          
+          <div class="form-group">
+            <label class="form-label" for="fb-category-select">Loại lỗi / Góp ý</label>
+            <select id="fb-category-select" class="form-select" required>
+              <option value="typo" selected>✏️ Lỗi chính tả / Diễn đạt chưa rõ</option>
+              <option value="wrong_key">❌ Sai đáp án chuẩn</option>
+              <option value="bad_content">⚠️ Nội dung câu hỏi có vấn đề</option>
+              <option value="other">💬 Góp ý / Ý kiến khác</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="fb-comment-text">Chi tiết mô tả lỗi / góp ý của bạn</label>
+            <textarea id="fb-comment-text" class="form-textarea" rows="4" placeholder="Nhập mô tả chi tiết lỗi hoặc góp ý giúp ban quản trị chỉnh sửa..." required></textarea>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.25rem;">
+            <button type="button" class="btn btn-secondary" onclick="app.views.history.closeFeedbackModal()">Hủy Bỏ</button>
+            <button type="submit" class="btn btn-primary">📤 Gửi Báo Cáo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -476,6 +514,7 @@ Lời giải: HTML là ngôn ngữ đánh dấu siêu văn bản." oninput="app.
   <script src="js/services/quizEngineService.js"></script>
   <script src="js/services/historyService.js"></script>
   <script src="js/services/savedService.js"></script>
+  <script src="js/services/feedbackService.js"></script>
 
   <script src="js/views/authView.js"></script>
   <script src="js/views/uploadView.js"></script>
