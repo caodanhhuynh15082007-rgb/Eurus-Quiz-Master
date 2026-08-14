@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.1 Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.1 Shipped (Answer Selection Statistics Bars, Difficulty Rating Gauge & Question Error Reporting Modal).
+- **Features Implemented:**
+  1. **View Answer Selection Statistics Bars** (`historyView.js`, `feedbackService.js`, `styles.css`): Visual percentage bars for options A, B, C, D in History Detail Modal.
+  2. **Question Difficulty Rating Gauge** (`historyView.js`, `feedbackService.js`): Dynamic difficulty badge (Dễ 🟢 / Trung Bình 🟡 / Khó 🔴) based on correct response ratio.
+  3. **Report Error / Feedback Pop-up Modal** (`index.html`, `historyView.js`, `feedbackService.js`): `#feedback-modal` overlay for reporting question typos, wrong keys, or content issues saved to LocalStorage.
+- **Verification & Checksum:** 100% Pass (`16/16` files verified). SHA256: `2405B63932FD23595EA83CACF5F77063D87AB5DB323EE533B16A2F63B84AE171`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.0 Enhanced Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.0 Shipped (Custom Timer, Saved Quizzes View, Read-Only History Review & Compulsory Answer Explanations).
 - **Features Implemented:**
