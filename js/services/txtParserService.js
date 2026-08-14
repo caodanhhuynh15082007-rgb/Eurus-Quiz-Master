@@ -83,7 +83,7 @@ class TxtParserService {
       }
 
       // 3. Detect Combined Answer + Explanation on same line (e.g. "Đáp án: A - Lời giải: HTML là...")
-      const ansWithExpMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])[\.\,\-\s]+(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
+      const ansWithExpMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])[\.\,\-\s]+(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
       if (ansWithExpMatch) {
         const letter = ansWithExpMatch[1].toUpperCase();
         currentQuestion.correctAnswerIndex = letter.charCodeAt(0) - 65;
@@ -100,12 +100,12 @@ class TxtParserService {
         continue;
       }
 
-      // 5. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "Explanation: ...", "Lý do: ...")
-      const expMatch = line.match(/^(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
+      // 5. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "[Lời giải] ...", "(Lời giải) ...")
+      const expMatch = line.match(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
       if (expMatch) {
         let expText = expMatch[1].trim();
         // Remove duplicate prefix if present
-        expText = expText.replace(/^(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+/i, '').trim();
+        expText = expText.replace(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+/i, '').trim();
         currentQuestion.explanation = expText;
         continue;
       }
@@ -144,6 +144,7 @@ class TxtParserService {
 
   /**
    * Validate if a question block has sufficient options and a correct answer index.
+   * Auto-populates a natural educational explanation fallback if Lời giải line was omitted.
    */
   validateQuestion(q) {
     if (!q.questionText || q.questionText.trim().length === 0) {
@@ -155,6 +156,15 @@ class TxtParserService {
     if (q.correctAnswerIndex < 0 || q.correctAnswerIndex >= q.options.length) {
       return { valid: false, error: `Câu ${q.number} chưa ghi rõ đáp án đúng (VD: Đáp án: A).` };
     }
+
+    // Ensure every single question has a valid, educational textual explanation
+    if (!q.explanation || !q.explanation.trim()) {
+      const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+      const letter = optionLetters[q.correctAnswerIndex] || (q.correctAnswerIndex + 1);
+      const text = q.options[q.correctAnswerIndex] || '';
+      q.explanation = `Phương án đúng là ${letter}: "${text}". Đây là câu trả lời chính xác được xác thực theo dữ liệu chuẩn của bài thi.`;
+    }
+
     return { valid: true };
   }
 

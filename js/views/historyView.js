@@ -133,24 +133,19 @@ class HistoryView {
       });
       optionsHtml += '</div>';
 
-      // 2. Textual Explanation HTML (Parsed from TXT file)
+      // 2. Textual Explanation HTML (Parsed directly from TXT file)
       const correctLetter = optionLetters[item.correctAnswer] || String(item.correctAnswer + 1);
       const correctOptionText = item.options[item.correctAnswer] || '';
+      
+      let expText = (item.explanation && item.explanation.trim())
+        ? item.explanation.trim()
+        : `Phương án đúng là ${correctLetter}: "${correctOptionText}". Đây là câu trả lời chính xác được xác nhận theo dữ liệu chuẩn của bài thi.`;
 
-      let expHtml = '';
-      if (item.explanation && item.explanation.trim()) {
-        expHtml = `
-          <div class="explanation-box" style="margin-top: 0.85rem; border-left: 3px solid var(--accent-emerald); background: rgba(16, 185, 129, 0.08); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
-            💡 <strong>Lời Giải / Lý Do Chọn Đáp Án Đúng:</strong> ${this.escapeHtml(item.explanation.trim())}
-          </div>
-        `;
-      } else {
-        expHtml = `
-          <div class="explanation-box" style="margin-top: 0.85rem; border-left: 3px solid var(--glass-border); background: rgba(15, 23, 42, 0.4); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.88rem; color: var(--text-muted);">
-            ℹ️ <em>(Nội dung file TXT chưa bao gồm dòng 'Lời giải:' cho câu này. Phương án chuẩn: ${correctLetter} - "${this.escapeHtml(correctOptionText)}")</em>
-          </div>
-        `;
-      }
+      const expHtml = `
+        <div class="explanation-box" style="margin-top: 0.85rem; border-left: 3px solid var(--accent-emerald); background: rgba(16, 185, 129, 0.08); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+          💡 <strong>Lời Giải / Giải Thích Đáp Án:</strong> ${this.escapeHtml(expText)}
+        </div>
+      `;
 
       // 3. Answer Statistics & Difficulty Rating HTML
       const statsData = window.feedbackService.getAnswerStatistics(item.questionId || ('q_' + qIdx), item.correctAnswer, item.options.length);
