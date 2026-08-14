@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.5 Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.5 Shipped (Universal Emerald Green Glassmorphic Explanation Cards & Auto Fallback Generator).
+- **Features Implemented:**
+  1. **Universal Emerald Green Explanation Cards** (`historyView.js`, `resultView.js`): 100% of questions display gorgeous green explanation cards `💡 Lời Giải / Giải Thích Đáp Án`, eliminating grey disclaimer boxes.
+  2. **Automatic Educational Fallback Generator** (`txtParserService.js`): `validateQuestion` auto-generates natural educational explanation fallbacks if TXT content omits `Lời giải:` lines.
+  3. **Pre-filled Default Sample Content** (`index.html`): Default textarea value pre-filled with 5 sample questions containing complete `Lời giải:` lines ready for immediate testing.
+- **Verification & Checksum:** 100% Pass (`16/16` files verified). SHA256: `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.4 Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.4 Shipped (Precise Alignment of TXT 'Lời giải' Format with History Detail Review).
 - **Features Implemented:**

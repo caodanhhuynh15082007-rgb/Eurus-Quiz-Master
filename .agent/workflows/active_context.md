@@ -1,10 +1,10 @@
 ---
-status: TEST_PASSED
-active_phase: "Phase 1: Core Web Quiz System (v2.5 Enhanced)"
-active_feature: "SPEC-1.0: Seamless TXT 'Lời giải' Integration & Universal Educational Green Explanation Cards"
+status: IDLE
+active_phase: "Phase 1 Completed & Shipped (v2.5 Master Release)"
+active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "9220cbe"
-last_test_status: "PASS (16/16 System Files Verified & Validated)"
+last_commit: "f6eefe2"
+last_test_status: "PASS (All DoD Requirements Met)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** All Verification Tests Passed (`/test` Complete)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.5 Fully Shipped (`f6eefe2`)
 
 ---
 
@@ -38,11 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Full System Verification (`/test`)
-- **Status:** PASS (16/16 Files Verified).
-- **Verified Components:**
-  1. `txtParserService.js` (Universal explanation fallback generator in `validateQuestion`)
-  2. `historyView.js` (Universal green glassmorphism explanation card `💡 Lời Giải / Giải Thích Đáp Án`)
-  3. `resultView.js` (Universal green glassmorphism explanation card in scorecard)
-  4. `index.html` (Pre-filled sample content with `Lời giải:` lines)
-- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
+### Session 2026-08-14 — Eurus Quiz Master v2.5 Release (`/ship`)
+- **Status:** IDLE (All Features 100% Shipped).
+- **Spec Checksum:** `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`
+- **Git Release Commit:** [`f6eefe2`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Shipped in v2.5:**
+  1. Universal Emerald Green Glassmorphic Explanation Cards (`💡 Lời Giải / Giải Thích Đáp Án`) for 100% of test questions.
+  2. Automatic Educational Fallback Generator ensuring no empty explanations exist.
+  3. Pre-populated default sample content in `<textarea id="raw-txt-input">` with complete `Lời giải:` lines.
