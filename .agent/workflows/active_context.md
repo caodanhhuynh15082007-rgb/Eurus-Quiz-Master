@@ -1,10 +1,10 @@
 ---
-status: IDLE
-active_phase: "Phase 1 Completed & Shipped (v2.3 Master Release)"
-active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
+status: TEST_PASSED
+active_phase: "Phase 1: Core Web Quiz System (v2.4 Enhanced)"
+active_feature: "SPEC-1.0: Precise Alignment of TXT 'Lời giải' Format with History Detail Review"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "a2f3782"
-last_test_status: "PASS (All 16 System Files Saved & Verified)"
+last_commit: "439a6da"
+last_test_status: "PASS (16/16 System Files Verified & Validated)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.3 Saved & Committed (`a2f3782`)
+> **Last Checkpoint:** 2026-08-14 | **Status:** All Verification Tests Passed (`/test` Complete)
 
 ---
 
@@ -38,7 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Final Teardown Save (`/save`)
-- **Status:** IDLE (All Web Features Saved & Verified).
-- **Git Commit:** [`a2f3782`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **All 16 Application Files Verified & Saved.**
+### Session 2026-08-14 — Full System Verification (`/test`)
+- **Status:** PASS (16/16 Files Verified).
+- **Verified Components:**
+  1. `txtParserService.js` (Exact parsing of `Lời giải:` lines in TXT input)
+  2. `historyView.js` (Renders `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng:` with parsed TXT text)
+  3. `resultView.js` (Renders `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng:` in post-quiz scorecard)
+  4. `index.html` & `uploadView.js` (Free typed duration number & unit selector)
+- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
