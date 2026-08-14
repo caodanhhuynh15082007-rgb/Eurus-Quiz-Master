@@ -1,6 +1,6 @@
 /**
  * TxtParserService - Parses raw TXT files into structured quiz question banks with error diagnostics.
- * Supports up to 6 options (A-F), multiple answer key patterns, multi-line explanations, and sample preset banks.
+ * Supports up to 6 options (A-F), multiple answer key patterns, multi-line & inline textual explanations, and sample preset banks.
  */
 class TxtParserService {
   /**
@@ -82,7 +82,16 @@ class TxtParserService {
         continue;
       }
 
-      // 3. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "ĐÁP ÁN: A")
+      // 3. Detect Combined Answer + Explanation on same line (e.g. "Đáp án: A - Lời giải: HTML là...")
+      const ansWithExpMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])[\.\,\-\s]+(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
+      if (ansWithExpMatch) {
+        const letter = ansWithExpMatch[1].toUpperCase();
+        currentQuestion.correctAnswerIndex = letter.charCodeAt(0) - 65;
+        currentQuestion.explanation = ansWithExpMatch[2].trim();
+        continue;
+      }
+
+      // 4. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "ĐÁP ÁN: A")
       const ansMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])/i);
       if (ansMatch) {
         const letter = ansMatch[1].toUpperCase();
@@ -91,14 +100,17 @@ class TxtParserService {
         continue;
       }
 
-      // 4. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "Explanation: ...", "Lý do: ...")
-      const expMatch = line.match(/^(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\s]+(.*)/i);
+      // 5. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "Explanation: ...", "Lý do: ...")
+      const expMatch = line.match(/^(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
       if (expMatch) {
-        currentQuestion.explanation = expMatch[1].trim();
+        let expText = expMatch[1].trim();
+        // Remove duplicate prefix if present
+        expText = expText.replace(/^(?:Lời\s*giải|Giải\s*thích|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+/i, '').trim();
+        currentQuestion.explanation = expText;
         continue;
       }
 
-      // 5. Append multi-line explanation if explanation header was already set
+      // 6. Append multi-line explanation if explanation header was already set
       if (currentQuestion.explanation && currentQuestion.explanation.length > 0 &&
           !line.match(/^(?:Câu|Question|\d+[\.\:\)])/i) &&
           !line.match(/^(\*?)\s*([A-F])[\.\:\)]/i) &&
@@ -156,7 +168,7 @@ B. JavaScript
 C. C++
 D. Java
 Đáp án: B
-Lời giải: JavaScript là ngôn ngữ duy nhất được tích hợp sẵn và thực thi trực tiếp trên tất cả các trình duyệt Web hiện đại (Chrome, Firefox, Safari, Edge) để tạo tính năng tương tác.
+Lời giải: JavaScript là ngôn ngữ duy nhất được tích hợp sẵn và thực thi trực tiếp trên tất cả các trình duyệt Web hiện đại (Chrome, Firefox, Safari, Edge) để tạo các tính năng tương tác người dùng.
 
 Câu 2: HTML viết tắt của từ nào sau đây?
 A. HyperText Markup Language
@@ -164,7 +176,7 @@ B. High Tech Modern Language
 C. Hyperlink Text System
 D. Home Tool Markup
 Đáp án: A
-Lời giải: HTML đại diện cho "HyperText Markup Language" (Ngôn ngữ đánh dấu siêu văn bản), đóng vai trò dựng bộ khung cấu trúc và nội dung cho mọi trang web.
+Lời giải: HTML đại diện cho "HyperText Markup Language" (Ngôn ngữ đánh dấu siêu văn bản), đóng vai trò xây dựng bộ khung cấu trúc và nội dung chính cho mọi trang web.
 
 Câu 3: CSS được sử dụng chính để làm gì trong phát triển Web?
 A. Quản lý cơ sở dữ liệu
@@ -172,7 +184,7 @@ B. Xử lý logic máy chủ (Backend)
 C. Định kiểu giao diện và bố cục trang web
 D. Biên dịch mã nguồn ứng dụng
 Đáp án: C
-Lời giải: CSS (Cascading Style Sheets) phụ trách trang trí màu sắc, phông chữ, bố cục responsive và các hiệu ứng hình ảnh (như glassmorphism, animation) cho trang web.
+Lời giải: CSS (Cascading Style Sheets) phụ trách thiết kế màu sắc, phông chữ, bố cục hiển thị và các hiệu ứng giao diện (như glassmorphism, responsive UI) cho trang web.
 
 Câu 4: Giao thức bảo mật mã hóa truy cập Web tiêu chuẩn hiện nay là gì?
 A. HTTP
@@ -180,7 +192,7 @@ B. FTP
 C. HTTPS
 D. SMTP
 Đáp án: C
-Lời giải: HTTPS (HTTP Secure) sử dụng chứng chỉ SSL/TLS để mã hóa toàn bộ dữ liệu truyền qua lại giữa trình duyệt người dùng và máy chủ, ngăn chặn bị đánh cắp thông tin.
+Lời giải: HTTPS (HTTP Secure) sử dụng chứng chỉ mã hóa SSL/TLS để bảo mật toàn bộ dữ liệu truyền qua lại giữa trình duyệt người dùng và trang web, chống nguy cơ nghe lén hay đánh cắp thông tin.
 
 Câu 5: Trong JavaScript, từ khóa nào khai báo một hằng số không thể gán lại giá trị?
 A. var
@@ -188,7 +200,7 @@ B. let
 C. const
 D. static
 Đáp án: C
-Lời giải: Theo chuẩn ES6 JavaScript, từ khóa "const" (constant) dùng để khai báo hằng số. Biến khai báo bằng const không thể gán lại giá trị mới sau khi đã khởi tạo.`;
+Lời giải: Theo chuẩn ES6 JavaScript, từ khóa "const" (constant) dùng để khai báo hằng số. Biến khai báo bằng const không thể thay đổi hoặc gán lại giá trị mới sau khi đã khởi tạo.`;
   }
 }
 
