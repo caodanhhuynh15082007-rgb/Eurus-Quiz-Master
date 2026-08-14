@@ -77,6 +77,7 @@ class App {
     // Show target view
     targetSection.classList.add('active');
     this.router.currentView = viewName;
+    window.scrollTo({ top: 0, behavior: 'instant' });
 
     // Trigger view render lifecycle
     if (viewName === 'quiz') {

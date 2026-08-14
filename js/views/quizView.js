@@ -197,16 +197,16 @@ class QuizView {
 
       window.app.showToast('Đã nộp bài thành công! Đang chuyển đến bảng kết quả...', 'success');
       
-      // Render result view
-      window.views.result.renderResult(attemptResult);
+      // Render result view using correct window.resultView reference
+      window.resultView.renderResult(attemptResult);
       window.app.router.navigate('result');
     } catch (e) {
-      window.app.showToast(e.message, 'error');
+      window.app.showToast('Lỗi khi nộp bài: ' + e.message, 'error');
     }
   }
 
   escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
   }
 }
 

@@ -48,7 +48,7 @@ class ProfileView {
 
     try {
       window.authService.updateProfile({ fullname, email });
-      window.views.auth.renderUserBadge();
+      window.authView.renderUserBadge();
       this.renderView();
       window.app.showToast('Đã lưu thông tin hồ sơ học viên thành công!', 'success');
     } catch (e) {
