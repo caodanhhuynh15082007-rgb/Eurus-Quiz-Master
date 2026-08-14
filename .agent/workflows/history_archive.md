@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.4 Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.4 Shipped (Precise Alignment of TXT 'Lời giải' Format with History Detail Review).
+- **Features Implemented:**
+  1. **TXT 'Lời giải' Alignment with Textarea Format Guide** (`txtParserService.js`): Robust parsing of `Lời giải:` lines right under `Đáp án: A` matching textarea format guide.
+  2. **Prominent Block `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng`** (`historyView.js`, `resultView.js`): Clear prominent heading displaying exact parsed reasoning text.
+  3. **Contextual Informative Fallback** (`historyView.js`, `resultView.js`): Clear note when TXT content lacks `Lời giải:` lines.
+- **Verification & Checksum:** 100% Pass (`16/16` files verified). SHA256: `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.3 Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.3 Shipped (Exact Detailed TXT Textual Explanation Parsing & Rendering).
 - **Features Implemented:**

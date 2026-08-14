@@ -1,10 +1,10 @@
 ---
-status: TEST_PASSED
-active_phase: "Phase 1: Core Web Quiz System (v2.4 Enhanced)"
-active_feature: "SPEC-1.0: Precise Alignment of TXT 'Lời giải' Format with History Detail Review"
+status: IDLE
+active_phase: "Phase 1 Completed & Shipped (v2.4 Master Release)"
+active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "439a6da"
-last_test_status: "PASS (16/16 System Files Verified & Validated)"
+last_commit: "ce50156"
+last_test_status: "PASS (All DoD Requirements Met)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** All Verification Tests Passed (`/test` Complete)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.4 Fully Shipped (`ce50156`)
 
 ---
 
@@ -38,11 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Full System Verification (`/test`)
-- **Status:** PASS (16/16 Files Verified).
-- **Verified Components:**
-  1. `txtParserService.js` (Exact parsing of `Lời giải:` lines in TXT input)
-  2. `historyView.js` (Renders `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng:` with parsed TXT text)
-  3. `resultView.js` (Renders `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng:` in post-quiz scorecard)
-  4. `index.html` & `uploadView.js` (Free typed duration number & unit selector)
-- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
+### Session 2026-08-14 — Eurus Quiz Master v2.4 Release (`/ship`)
+- **Status:** IDLE (All Features 100% Shipped).
+- **Spec Checksum:** `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`
+- **Git Release Commit:** [`ce50156`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Shipped in v2.4:**
+  1. Exact alignment of parsed TXT `Lời giải:` lines with the format guide displayed in the text paste textarea.
+  2. Clear prominent rendering of `💡 Lời Giải / Lý Do Chọn Đáp Án Đúng:` in History detail review modal and Result scorecard.
+  3. Informative contextual note for questions lacking `Lời giải:` lines in raw TXT.
