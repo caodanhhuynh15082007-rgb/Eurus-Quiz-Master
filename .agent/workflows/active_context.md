@@ -1,10 +1,10 @@
 ---
-status: IDLE
-active_phase: "Phase 1 Completed & Shipped (v2.1 Master Release)"
-active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
+status: TEST_PASSED
+active_phase: "Phase 1: Core Web Quiz System (v2.2 Enhanced)"
+active_feature: "SPEC-1.0: Freely Configurable Number & Unit Selector Timer (Seconds/Minutes/Hours)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "35065aa"
-last_test_status: "PASS (All 16 System Files Saved & Verified)"
+last_commit: "27f5e44"
+last_test_status: "PASS (16/16 System Files Verified & Validated)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.1 Saved & Committed (`35065aa`)
+> **Last Checkpoint:** 2026-08-14 | **Status:** All Verification Tests Passed (`/test` Complete)
 
 ---
 
@@ -25,7 +25,7 @@ memory_links:
 Project Root/
 ├── 📄 index.html                        (SPA Entry Shell & Dynamic View Containers)
 ├── 📂 css/
-│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphic Animations)
+│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphism, Animations)
 ├── 📂 js/
 │   ├── 📄 app.js                        (Core Application Bootstrap & SPA State Router)
 │   ├── 📂 services/                     (authService, txtParserService, quizEngineService, historyService, savedService, feedbackService)
@@ -38,7 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Final Teardown Save (`/save`)
-- **Status:** IDLE (All Web Features Saved & Verified).
-- **Git Commit:** [`35065aa`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **All 16 Application Files Verified & Saved.**
+### Session 2026-08-14 — Full System Verification (`/test`)
+- **Status:** PASS (16/16 Files Verified).
+- **Verified Components:**
+  1. `index.html` (Numerical duration input `#quiz-duration-value` & unit dropdown `#quiz-duration-unit`)
+  2. `uploadView.js` (Free numerical duration reader & conversion to total seconds for Giây / Phút / Giờ)
+  3. `quizEngineService.js` (`startSession` accepts `durationSeconds`)
+  4. `quizView.js` (`renderTimer` formats `HH:MM:SS` for long durations and `MM:SS` for short ones)
+- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
