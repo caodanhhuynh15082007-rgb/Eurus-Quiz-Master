@@ -1,6 +1,6 @@
-# 📜 SPEC-1.0: Hệ Thống Web Làm Trắc Nghiệm Từ File TXT (v2.1 Enhanced)
+# 📜 SPEC-1.0: Hệ Thống Web Làm Trắc Nghiệm Từ File TXT (v2.2 Enhanced)
 
-> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Configurable Timer, Saved Quizzes View, Answer Statistics & Question Error Reporting
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Free Number & Unit Quiz Timer Configurator (Seconds/Minutes/Hours), Saved Quizzes View, Answer Statistics & Question Error Reporting
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## 1.1 User Stories
 
-- **As a Student / Instructor**, I want to manually configure the quiz countdown duration (in minutes) on the main Upload page so that I can set exact time limits for tests regardless of question count.
+- **As a Student / Instructor**, I want a dedicated numerical input field and unit dropdown (Seconds, Minutes, Hours) on the main Upload page so that I can freely type any exact custom time duration without fixed preset limits.
 - **As a Student**, I want to save any completed quiz attempt directly from the History detail modal into a dedicated "Bài Kiểm Tra Đã Lưu" page so that I can easily review and re-take saved quizzes for revision.
 - **As a Student**, I want a dedicated 4th view "Bài Kiểm Tra Đã Lưu" in the main navigation bar to browse, re-take, or remove saved quizzes.
 - **As a Student**, I want every question in the History detail view to display a mandatory explanation for the CORRECT answer regardless of whether my answer was right or wrong.
@@ -35,11 +35,12 @@ Then it validates the format line-by-line and converts valid syntax into a Quiz 
 And if syntax errors exist on specific lines, it displays precise line numbers with actionable fix guidance without crashing
 ```
 
-### Scenario 3: Configurable Quiz Timer Duration on Main Page
+### Scenario 3: Freely Configurable Quiz Timer Duration & Unit Selector (Seconds / Minutes / Hours)
 ```gherkin
 Given a user is on the main "Quản Lý File TXT" page
-When they select or input a custom timer duration in minutes (e.g. 5, 10, 15, 30, 45, 60 minutes)
-Then the system uses this exact configured duration for the quiz countdown ticker instead of auto-computing fixed limits
+When they type any custom number into the duration input field (e.g., 45, 90, 120, 300)
+And choose a unit from the unit dropdown ("Giây", "Phút", "Giờ")
+Then the system converts the duration into exact total seconds (Seconds = N, Minutes = N*60, Hours = N*3600) for the quiz countdown timer
 ```
 
 ### Scenario 4: Read-Only History Detail Review & Compulsory Explanations
@@ -87,7 +88,7 @@ services:
   - name: txtParserService
     description: Multi-format TXT parser & explanation generator
   - name: quizEngineService
-    description: Timed quiz engine & auto-grader
+    description: Timed quiz engine & auto-grader with free seconds/minutes/hours duration conversion
   - name: historyService
     description: History logging & attempt reader
   - name: savedService
@@ -106,7 +107,7 @@ services:
 4. **No Unbounded Storage Overflow**: Max 100 entries limit for History, Saved Quizzes, and Feedback logs.
 5. **No Mid-Quiz Silent Data Loss**: Browser tab refresh/unload guards.
 6. **No Editable Inputs in History Review**: Strictly read-only attempt modal review.
-7. **No Auto-Overriding User Timer Selection**: User timer duration setting on Upload page MUST override auto-generated timing.
+7. **No Rigid Preset Timer Limits**: The timer input MUST allow free typed numerical entry and unit conversion (seconds, minutes, hours).
 8. **No Empty Feedback Submissions**: Feedback modal MUST require error category and description text before saving.
 
 ---
@@ -115,20 +116,20 @@ services:
 
 ## Task 1: Core Layout & Styling Infrastructure
 - [x] `[NEW]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Core design system, glassmorphic layout, modal overlays, answer statistics bars & feedback dialog styles.
-- [x] `[NEW]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): SPA HTML shell with 4 navbar links, History detail modal stats toggle & Feedback modal overlay.
+- [x] `[NEW]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): SPA HTML shell with numerical duration input & unit dropdown selector (Giây, Phút, Giờ).
 
 ## Task 2: Services Subsystem (Data & Business Logic Layer)
 - [x] `[NEW]` [js/services/authService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/authService.js): Student auth & LocalStorage session persistence.
 - [x] `[NEW]` [js/services/txtParserService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/txtParserService.js): Multi-format TXT parser with automatic correct answer explanation generator.
-- [x] `[NEW]` [js/services/quizEngineService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/quizEngineService.js): Configurable timer session manager & auto-grader.
+- [x] `[NEW]` [js/services/quizEngineService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/quizEngineService.js): Configurable timer session manager supporting free total seconds & unit conversion.
 - [x] `[NEW]` [js/services/historyService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/historyService.js): History logging & search query reader.
 - [x] `[NEW]` [js/services/savedService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/savedService.js): Saved quiz manager (save, delete, list, re-take).
 - [x] `[NEW]` [js/services/feedbackService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/feedbackService.js): Question error reporting & feedback persistence manager.
 
 ## Task 3: Dynamic UI Views Layer
 - [x] `[NEW]` [js/views/authView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/authView.js): Auth forms controller.
-- [x] `[NEW]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Drag&Drop TXT uploader with custom timer duration input.
-- [x] `[NEW]` [js/views/quizView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/quizView.js): Interactive quiz interface with smooth submit navigation.
+- [x] `[NEW]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Free typed duration input & unit dropdown reader with unit conversion logic.
+- [x] `[NEW]` [js/views/quizView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/quizView.js): Interactive quiz interface with HH:MM:SS timer formatting.
 - [x] `[NEW]` [js/views/resultView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/resultView.js): Result scorecard & compulsory correct answer explanations.
 - [x] `[NEW]` [js/views/historyView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/historyView.js): History review with Answer Statistics bars, difficulty gauge & "🚩 Báo Cáo Lỗi" modal trigger.
 - [x] `[NEW]` [js/views/savedView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/savedView.js): 4th navbar view "Bài Kiểm Tra Đã Lưu" controller.

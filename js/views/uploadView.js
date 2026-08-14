@@ -194,16 +194,31 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
       return;
     }
 
-    // Read user configured duration in minutes
-    const durationElem = document.getElementById('quiz-duration-select');
-    const customMinutes = durationElem ? parseInt(durationElem.value, 10) : 15;
+    // Read user configured duration value and unit
+    const numElem = document.getElementById('quiz-duration-value');
+    const unitElem = document.getElementById('quiz-duration-unit');
+    
+    let numValue = numElem ? parseInt(numElem.value, 10) : 15;
+    if (isNaN(numValue) || numValue <= 0) numValue = 15;
+
+    const unitValue = unitElem ? unitElem.value : 'minutes';
+    let totalSeconds = 15 * 60;
+
+    if (unitValue === 'seconds') {
+      totalSeconds = Math.max(5, numValue);
+    } else if (unitValue === 'hours') {
+      totalSeconds = Math.max(5, numValue * 3600);
+    } else { // 'minutes'
+      totalSeconds = Math.max(5, numValue * 60);
+    }
 
     // Start active quiz session
     try {
       window.quizEngineService.startSession({
         title: titleInput || 'Bài Trắc Nghiệm TXT',
         questions: parseResult.questions,
-        durationMinutes: customMinutes || 15
+        durationSeconds: totalSeconds,
+        durationMinutes: Math.ceil(totalSeconds / 60)
       });
 
       window.app.showToast(`Bắt đầu làm bài thi "${titleInput}"!`, 'success');

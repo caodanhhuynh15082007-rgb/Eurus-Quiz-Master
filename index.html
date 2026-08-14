@@ -156,23 +156,21 @@
               <span id="parse-status-badge" class="badge badge-pass" style="display: none;">Hợp lệ</span>
             </div>
 
-            <div class="form-group" style="display: flex; gap: 1rem;">
+            <div class="form-group" style="display: flex; gap: 1rem; align-items: flex-end;">
               <div style="flex: 2;">
                 <label class="form-label" for="quiz-title-input">Tiêu đề bài thi</label>
                 <input type="text" id="quiz-title-input" class="form-input" placeholder="Tiêu đề đề thi (VD: Kiểm Tra Kiến Thức Lập Trình Web)" value="Đề Thi Trắc Nghiệm Từ File TXT">
               </div>
-              <div style="flex: 1;">
-                <label class="form-label" for="quiz-duration-select">⏱️ Thời gian làm bài</label>
-                <select id="quiz-duration-select" class="form-select">
-                  <option value="5">5 Phút</option>
-                  <option value="10">10 Phút</option>
-                  <option value="15" selected>15 Phút</option>
-                  <option value="20">20 Phút</option>
-                  <option value="30">30 Phút</option>
-                  <option value="45">45 Phút</option>
-                  <option value="60">60 Phút</option>
-                  <option value="90">90 Phút</option>
-                </select>
+              <div style="flex: 1.5;">
+                <label class="form-label">⏱️ Thời gian làm bài thi</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="number" id="quiz-duration-value" class="form-input" min="1" max="999" value="15" placeholder="Nhập số..." style="flex: 1; text-align: center; font-weight: 700;">
+                  <select id="quiz-duration-unit" class="form-select" style="flex: 1;">
+                    <option value="seconds">Giây</option>
+                    <option value="minutes" selected>Phút</option>
+                    <option value="hours">Giờ</option>
+                  </select>
+                </div>
               </div>
             </div>
 

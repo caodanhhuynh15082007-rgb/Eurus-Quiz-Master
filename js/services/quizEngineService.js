@@ -14,18 +14,20 @@ class QuizEngineService {
   }
 
   /**
-   * Start a fresh quiz session with question bank and duration (minutes).
+   * Start a fresh quiz session with question bank and duration (seconds or minutes).
    */
-  startSession({ quizId, title, questions, durationMinutes = 15 }) {
+  startSession({ quizId, title, questions, durationSeconds = null, durationMinutes = 15 }) {
     if (!questions || questions.length === 0) {
       throw new Error('Bộ câu hỏi trắc nghiệm rỗng!');
     }
+
+    const calculatedSeconds = durationSeconds ? Math.max(5, durationSeconds) : (durationMinutes * 60);
 
     this.activeQuiz = {
       quizId: quizId || 'quiz_' + Date.now(),
       title: title || 'Bài Trắc Nghiệm TXT',
       questions,
-      durationSeconds: durationMinutes * 60,
+      durationSeconds: calculatedSeconds,
       totalQuestions: questions.length,
       startedAt: new Date().toISOString()
     };
