@@ -1,10 +1,10 @@
 ---
-status: TEST_PASSED
-active_phase: "Phase 1: Core Web Quiz System (v2.2 Enhanced)"
-active_feature: "SPEC-1.0: Freely Configurable Number & Unit Selector Timer (Seconds/Minutes/Hours)"
+status: IDLE
+active_phase: "Phase 1 Completed & Shipped (v2.2 Master Release)"
+active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "27f5e44"
-last_test_status: "PASS (16/16 System Files Verified & Validated)"
+last_commit: "e362dbc"
+last_test_status: "PASS (All DoD Requirements Met)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** All Verification Tests Passed (`/test` Complete)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.2 Fully Shipped (`e362dbc`)
 
 ---
 
@@ -38,11 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Full System Verification (`/test`)
-- **Status:** PASS (16/16 Files Verified).
-- **Verified Components:**
-  1. `index.html` (Numerical duration input `#quiz-duration-value` & unit dropdown `#quiz-duration-unit`)
-  2. `uploadView.js` (Free numerical duration reader & conversion to total seconds for Giây / Phút / Giờ)
-  3. `quizEngineService.js` (`startSession` accepts `durationSeconds`)
-  4. `quizView.js` (`renderTimer` formats `HH:MM:SS` for long durations and `MM:SS` for short ones)
-- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
+### Session 2026-08-14 — Eurus Quiz Master v2.2 Release (`/ship`)
+- **Status:** IDLE (All Features 100% Shipped).
+- **Spec Checksum:** `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`
+- **Git Release Commit:** [`e362dbc`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Shipped in v2.2:**
+  1. Freely configurable numerical duration input field (`<input type="number">`).
+  2. Unit dropdown selector (`<select>`) supporting **Giây (Seconds)**, **Phút (Minutes)**, and **Giờ (Hours)**.
+  3. Automatic total seconds conversion and `HH:MM:SS` timer countdown formatting.

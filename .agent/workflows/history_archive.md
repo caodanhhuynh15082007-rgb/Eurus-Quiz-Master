@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.2 Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.2 Shipped (Freely Configurable Numerical Timer & Unit Selector Dropdown).
+- **Features Implemented:**
+  1. **Freely Configurable Duration Input** (`index.html`, `uploadView.js`): `<input type="number">` field allowing free typed time entry.
+  2. **Unit Selection Dropdown** (`index.html`, `uploadView.js`): Dropdown for unit selection: **Giây (Seconds)**, **Phút (Minutes)**, and **Giờ (Hours)**.
+  3. **Total Seconds Conversion & HH:MM:SS Countdown Formatting** (`quizEngineService.js`, `quizView.js`): Accurate unit conversion and timer countdown formatting.
+- **Verification & Checksum:** 100% Pass (`16/16` files verified). SHA256: `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.1 Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.1 Shipped (Answer Selection Statistics Bars, Difficulty Rating Gauge & Question Error Reporting Modal).
 - **Features Implemented:**
