@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.3 Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.3 Shipped (Exact Detailed TXT Textual Explanation Parsing & Rendering).
+- **Features Implemented:**
+  1. **Exact TXT Textual Explanation Parser** (`txtParserService.js`): Regex extraction for `Lời giải:`, `Giải thích:`, `Explanation:`, `Lý do:`, `Ghi chú:`, `Reason:` with multi-line support.
+  2. **Removal of Generic Boilerplate Text** (`historyView.js`, `resultView.js`): Replaced generic boilerplate string with exact parsed reasoning text from TXT file.
+  3. **Educational Conceptual Explanations** (`txtParserService.js`, `uploadView.js`): Preset test questions enriched with detailed conceptual reasoning explanations.
+- **Verification & Checksum:** 100% Pass (`16/16` files verified). SHA256: `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.2 Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.2 Shipped (Freely Configurable Numerical Timer & Unit Selector Dropdown).
 - **Features Implemented:**
