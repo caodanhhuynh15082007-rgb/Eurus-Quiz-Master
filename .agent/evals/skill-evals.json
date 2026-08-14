@@ -1,0 +1,19 @@
+{
+  "evaluations": [
+    {
+      "skill": "spec",
+      "test_prompt": "Create a spec for adding password reset via email",
+      "expected_output_file": "specs/SPEC-<id>_<name>.md"
+    },
+    {
+      "skill": "test",
+      "test_prompt": "Run tests and handle any failures",
+      "expected_behavior": "Executes test runner, logs errors to scratchpad.md, stops if 2 failures occur"
+    },
+    {
+      "skill": "ship",
+      "test_prompt": "Ship current completed task",
+      "expected_behavior": "Updates active_context.md, archives specs/SPEC-<id>_<name>.md, resets scratchpad.md"
+    }
+  ]
+}
