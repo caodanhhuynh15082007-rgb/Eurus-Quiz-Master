@@ -133,18 +133,24 @@ class HistoryView {
       });
       optionsHtml += '</div>';
 
-      // 2. Compulsory Correct Explanation HTML
+      // 2. Textual Explanation HTML (Parsed from TXT file)
       const correctLetter = optionLetters[item.correctAnswer] || String(item.correctAnswer + 1);
       const correctOptionText = item.options[item.correctAnswer] || '';
-      const explanationText = item.explanation && item.explanation.trim()
-        ? item.explanation.trim()
-        : `Đáp án đúng chính xác là phương án ${correctLetter}: "${correctOptionText}".`;
 
-      const expHtml = `
-        <div class="explanation-box" style="margin-top: 0.75rem; border-left: 3px solid var(--accent-emerald);">
-          💡 <strong>Lời giải / Giải thích đáp án đúng:</strong> ${this.escapeHtml(explanationText)}
-        </div>
-      `;
+      let expHtml = '';
+      if (item.explanation && item.explanation.trim()) {
+        expHtml = `
+          <div class="explanation-box" style="margin-top: 0.85rem; border-left: 3px solid var(--accent-emerald); background: rgba(16, 185, 129, 0.08); padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+            💡 <strong>Lời Giải Chi Tiết (Nội Dung Từ File TXT):</strong> ${this.escapeHtml(item.explanation.trim())}
+          </div>
+        `;
+      } else {
+        expHtml = `
+          <div class="explanation-box" style="margin-top: 0.85rem; border-left: 3px solid var(--glass-border); background: rgba(15, 23, 42, 0.4); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.88rem; color: var(--text-muted);">
+            ℹ️ <em>(Tác giả chưa điền văn bản giải thích lý do cho câu hỏi này trong file TXT nguồn. Phương án chuẩn: ${correctLetter} - "${this.escapeHtml(correctOptionText)}")</em>
+          </div>
+        `;
+      }
 
       // 3. Answer Statistics & Difficulty Rating HTML
       const statsData = window.feedbackService.getAnswerStatistics(item.questionId || ('q_' + qIdx), item.correctAnswer, item.options.length);

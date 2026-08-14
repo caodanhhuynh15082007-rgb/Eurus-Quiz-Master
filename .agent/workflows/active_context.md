@@ -3,8 +3,8 @@ status: IDLE
 active_phase: "Phase 1 Completed & Shipped (v2.2 Master Release)"
 active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "e362dbc"
-last_test_status: "PASS (All DoD Requirements Met)"
+last_commit: "a43a5db"
+last_test_status: "PASS (All 16 System Files Saved & Verified)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.2 Fully Shipped (`e362dbc`)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.2 Saved & Committed (`a43a5db`)
 
 ---
 
@@ -25,7 +25,7 @@ memory_links:
 Project Root/
 ├── 📄 index.html                        (SPA Entry Shell & Dynamic View Containers)
 ├── 📂 css/
-│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphism, Animations)
+│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphic Animations)
 ├── 📂 js/
 │   ├── 📄 app.js                        (Core Application Bootstrap & SPA State Router)
 │   ├── 📂 services/                     (authService, txtParserService, quizEngineService, historyService, savedService, feedbackService)
@@ -38,11 +38,7 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Eurus Quiz Master v2.2 Release (`/ship`)
-- **Status:** IDLE (All Features 100% Shipped).
-- **Spec Checksum:** `15334B949BF33AED269FBA61A19481CBEA73DB4328903423E8786A767FAF0DD4`
-- **Git Release Commit:** [`e362dbc`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **Features Shipped in v2.2:**
-  1. Freely configurable numerical duration input field (`<input type="number">`).
-  2. Unit dropdown selector (`<select>`) supporting **Giây (Seconds)**, **Phút (Minutes)**, and **Giờ (Hours)**.
-  3. Automatic total seconds conversion and `HH:MM:SS` timer countdown formatting.
+### Session 2026-08-14 — Final Teardown Save (`/save`)
+- **Status:** IDLE (All Web Features Saved & Verified).
+- **Git Commit:** [`a43a5db`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **All 16 Application Files Verified & Saved.**
