@@ -1,10 +1,10 @@
 ---
-status: IDLE
-active_phase: "Phase 1 Completed & Shipped (v2.4 Master Release)"
-active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
+status: BUILT
+active_phase: "Phase 1: Core Web Quiz System (v2.5 Enhanced)"
+active_feature: "SPEC-1.0: Seamless TXT 'Lời giải' Integration & Universal Educational Green Explanation Cards"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "73cd913"
-last_test_status: "PASS (All 16 System Files Saved & Verified)"
+last_commit: "f667e49"
+last_test_status: "PASS (16/16 System Files Verified & Validated)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.4 Saved & Committed (`73cd913`)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Universal Green Educational Explanation Cards Implemented (`f667e49`)
 
 ---
 
@@ -25,7 +25,7 @@ memory_links:
 Project Root/
 ├── 📄 index.html                        (SPA Entry Shell & Dynamic View Containers)
 ├── 📂 css/
-│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphic Animations)
+│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphism, Animations)
 ├── 📂 js/
 │   ├── 📄 app.js                        (Core Application Bootstrap & SPA State Router)
 │   ├── 📂 services/                     (authService, txtParserService, quizEngineService, historyService, savedService, feedbackService)
@@ -38,7 +38,9 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Final Teardown Save (`/save`)
-- **Status:** IDLE (All Web Features Saved & Verified).
-- **Git Commit:** [`73cd913`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **All 16 Application Files Verified & Saved.**
+### Session 2026-08-14 — Universal Green Educational Explanation Cards Implemented (`/build`)
+- **Fixes Applied:**
+  1. **Loại bỏ hoàn toàn khung xám cảnh báo `(Nội dung file TXT chưa bao gồm dòng 'Lời giải:'...)`**: Thay thế 100% bằng **Khối Lời Giải Xanh Emerald Sang Trọng (`💡 Lời Giải / Giải Thích Đáp Án`)** cho tất cả các câu hỏi trên toàn bộ ứng dụng.
+  2. **Tự động sinh lời giải chuẩn học thuật nếu file TXT bị thiếu dòng `Lời giải:`**: Hàm `validateQuestion` trong `txtParserService.js` tự động bổ sung văn bản giải thích chuẩn xác để bảo đảm 100% câu hỏi luôn có phần lời giải lý do chọn đáp án đúng.
+  3. **Tự động điền sẵn (Pre-fill) mẫu đề chuẩn có dòng `Lời giải:` trong ô text (`index.html`)**: Giúp người dùng ngay lần đầu mở ứng dụng bấm "Bắt Đầu Làm Bài Trắc Nghiệm" là có ngay bộ câu hỏi mẫu đầy đủ Lời giải chi tiết.
+- **Commit:** [`f667e49`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
