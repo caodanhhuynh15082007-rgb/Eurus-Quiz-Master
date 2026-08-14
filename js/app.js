@@ -1,5 +1,5 @@
 /**
- * App.js - Main Application Entrypoint, SPA Router, Toast Notification Engine & Bootstrapper.
+ * App.js - Main Application Entrypoint, SPA Router, Global Keyboard Shortcuts & Toast Engine.
  */
 class App {
   constructor() {
@@ -32,6 +32,7 @@ class App {
     this.views.auth.init();
     this.views.upload.init();
     this.views.quiz.init();
+    this.setupGlobalKeyboardShortcuts();
 
     // Check transient quiz session recovery on refresh
     const restored = this.services.quizEngine.restoreTransientState();
@@ -41,6 +42,20 @@ class App {
     } else {
       this.switchView('upload');
     }
+  }
+
+  setupGlobalKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      // Only active during quiz view and when not typing in an input/textarea
+      if (this.router.currentView !== 'quiz') return;
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.key === 'ArrowLeft') {
+        this.views.quiz.prevQuestion();
+      } else if (e.key === 'ArrowRight') {
+        this.views.quiz.nextQuestion();
+      }
+    });
   }
 
   switchView(viewName) {
