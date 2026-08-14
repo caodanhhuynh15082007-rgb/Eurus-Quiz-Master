@@ -2,6 +2,10 @@
  * HistoryView - Renders student attempt history logs, search filtering, and dedicated Read-Only Modal inspection.
  */
 class HistoryView {
+  constructor() {
+    this.activeModalAttempt = null;
+  }
+
   renderView() {
     this.handleSearch();
   }
@@ -67,6 +71,8 @@ class HistoryView {
       return;
     }
 
+    this.activeModalAttempt = attempt;
+
     // Populate Read-Only Modal
     document.getElementById('hm-quiz-title').textContent = `${attempt.quizTitle} (Chế độ xem lại - Không thể chỉnh sửa)`;
     document.getElementById('hm-date-time').textContent = `Ngày làm bài: ${attempt.date}`;
@@ -124,14 +130,18 @@ class HistoryView {
       });
       optionsHtml += '</div>';
 
-      let expHtml = '';
-      if (item.explanation) {
-        expHtml = `
-          <div class="explanation-box" style="margin-top: 0.75rem;">
-            💡 <strong>Lời giải / Giải thích:</strong> ${this.escapeHtml(item.explanation)}
-          </div>
-        `;
-      }
+      // Always display explanation for the CORRECT answer regardless of correct/wrong/skipped
+      const correctLetter = optionLetters[item.correctAnswer] || String(item.correctAnswer + 1);
+      const correctOptionText = item.options[item.correctAnswer] || '';
+      const explanationText = item.explanation && item.explanation.trim()
+        ? item.explanation.trim()
+        : `Đáp án đúng chính xác là phương án ${correctLetter}: "${correctOptionText}".`;
+
+      const expHtml = `
+        <div class="explanation-box" style="margin-top: 0.75rem; border-left: 3px solid var(--accent-emerald);">
+          💡 <strong>Lời giải / Giải thích đáp án đúng:</strong> ${this.escapeHtml(explanationText)}
+        </div>
+      `;
 
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
@@ -149,6 +159,23 @@ class HistoryView {
     // Show modal
     const modal = document.getElementById('history-modal');
     if (modal) modal.classList.add('active');
+  }
+
+  saveCurrentModalQuiz() {
+    if (!this.activeModalAttempt) {
+      window.app.showToast('Không tìm thấy dữ liệu bài kiểm tra để lưu!', 'error');
+      return;
+    }
+
+    const currentUser = window.authService.getCurrentUser();
+    try {
+      window.savedService.saveQuiz(this.activeModalAttempt, currentUser);
+      window.app.showToast(`Đã lưu bài thi "${this.activeModalAttempt.quizTitle}" vào danh sách Bài Kiểm Tra Đã Lưu!`, 'success');
+      this.closeModal();
+      window.app.router.navigate('saved');
+    } catch (e) {
+      window.app.showToast(e.message, 'error');
+    }
   }
 
   closeModal() {

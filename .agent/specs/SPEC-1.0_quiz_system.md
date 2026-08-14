@@ -1,6 +1,6 @@
-# 📜 SPEC-1.0: Hệ Thống Web Làm Trắc Nghiệm Từ File TXT
+# 📜 SPEC-1.0: Hệ Thống Web Làm Trắc Nghiệm Từ File TXT (v2.0 Enhanced)
 
-> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Web Quiz System with TXT File Parser, Auth, Student Management, Automatic Grading, Read-Only History Review
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Configurable Timer, Saved Quizzes View, Read-Only History Review & Compulsory Answer Explanations
 
 ---
 
@@ -8,10 +8,10 @@
 
 ## 1.1 User Stories
 
-- **As a Student / User**, I want to register and log in to the web application so that I can maintain my personal profile and save my quiz history.
-- **As an Instructor / Student**, I want to upload or paste a `.txt` file containing quiz questions so that the system automatically parses and generates interactive multiple-choice tests.
-- **As a Student**, I want to take a timed multiple-choice quiz with immediate auto-grading and score evaluation so that I can test my knowledge efficiently.
-- **As a Student**, I want to review my quiz history and inspect detailed past attempts in read-only mode (no editing allowed) so that I can track my learning progress without accidental data tampering.
+- **As a Student / Instructor**, I want to manually configure the quiz countdown duration (in minutes) on the main Upload page so that I can set exact time limits for tests regardless of question count.
+- **As a Student**, I want to save any completed quiz attempt directly from the History detail modal into a dedicated "Bài Kiểm Tra Đã Lưu" page so that I can easily review and re-take saved quizzes for revision.
+- **As a Student**, I want a dedicated 4th view "Bài Kiểm Tra Đã Lưu" in the main navigation bar to browse, re-take, or remove saved quizzes.
+- **As a Student**, I want every question in the History detail view to display a mandatory explanation for the CORRECT answer regardless of whether my answer was right or wrong.
 
 ---
 
@@ -33,168 +33,84 @@ Then it validates the format line-by-line and converts valid syntax into a Quiz 
 And if syntax errors exist on specific lines, it displays precise line numbers with actionable fix guidance without crashing
 ```
 
-### Scenario 3: Taking Quiz, Timer Expiry & Automatic Grading
+### Scenario 3: Configurable Quiz Timer Duration on Main Page
 ```gherkin
-Given a student starts a quiz session generated from a question bank with a configurable timer
-When the student selects answers or the timer reaches 00:00
-Then the system automatically freezes inputs, evaluates all answered and skipped questions
-And computes percentage score, correct/wrong/skipped counts, time spent, and detailed answer explanation breakdown
+Given a user is on the main "Quản Lý File TXT" page
+When they select or input a custom timer duration in minutes (e.g. 5, 10, 15, 30, 45, 60 minutes)
+Then the system uses this exact configured duration for the quiz countdown ticker instead of auto-computing fixed limits
 ```
 
-### Scenario 4: Quiz History & Read-Only Attempt Review (No Modification Allowed)
+### Scenario 4: Read-Only History Detail Review & Compulsory Explanations
 ```gherkin
 Given a student is viewing their Quiz History list
 When they click "Xem Chi Tiết" on any completed attempt record
-Then a dedicated Read-Only Review interface pops up displaying full questions, user's submitted answers, correct answers, and explanations
-And all option selectors and inputs are strictly read-only and disabled so the student cannot edit or alter past answers
+Then a dedicated Read-Only Review modal pops up displaying questions, submitted answers, correct answers, and compulsory explanations for EVERY correct answer (auto-generated if missing in original TXT)
+And all option selectors are strictly read-only so past answers cannot be modified
 ```
 
-### Scenario 5: Page Refresh Resilience Mid-Quiz
+### Scenario 5: Saving Quiz Attempt for Revision & 4th Navigation View "Bài Kiểm Tra Đã Lưu"
 ```gherkin
-Given a student is actively taking a timed quiz
-When the student accidentally reloads or refreshes the browser tab
-Then the system intercepts with a warning dialog or restores current quiz progress and remaining time seamlessly
+Given a student opens the History detail modal for a completed test
+When they click the "⭐ Lưu Bài Kiểm Tra" button at the bottom right of the modal
+Then the quiz is saved into their personal Saved Quizzes index
+And appears in the new 4th navbar view "Bài Kiểm Tra Đã Lưu", where the student can re-take the test anytime
 ```
 
 ---
 
 # 📐 2. TECHNICAL ARCHITECTURE & NEGATIVE SPACE
 
-## 2.1 API Flat YAML Schema
+## 2.1 API & Services Topology
 
 ```yaml
-endpoints:
-  - path: /api/auth/register
-    method: POST
-    description: Register a new student account
-    request:
-      username: string
-      email: string
-      password: string
-      fullname: string
-    response:
-      success: boolean
-      user: { id: string, username: string, email: string, fullname: string }
-      token: string
-    errors:
-      409: "Username or Email already registered"
-
-  - path: /api/auth/login
-    method: POST
-    description: Authenticate student credentials
-    request:
-      username: string
-      password: string
-    response:
-      success: boolean
-      user: { id: string, username: string, email: string, fullname: string }
-      token: string
-    errors:
-      401: "Invalid username or password"
-
-  - path: /api/profile
-    method: PUT
-    description: Update student profile details
-    request:
-      fullname: string
-      email: string
-      avatar: string
-    response:
-      success: boolean
-      user: { id: string, username: string, email: string, fullname: string }
-
-  - path: /api/quiz/parse-txt
-    method: POST
-    description: Parse raw TXT file string or upload into structured quiz payload
-    request:
-      fileContent: string
-      title: string
-    response:
-      success: boolean
-      quizId: string
-      title: string
-      questionCount: number
-      questions:
-        - id: string
-          questionText: string
-          options: list[string]
-          correctAnswerIndex: number
-          explanation: string
-      parseErrors:
-        - line: number
-          message: string
-
-  - path: /api/quiz/submit
-    method: POST
-    description: Grade submitted answers and persist attempt result
-    request:
-      quizId: string
-      quizTitle: string
-      userAnswers: map[string, number] # questionId -> optionIndex (-1 for skipped)
-      timeSpentSeconds: number
-    response:
-      attemptId: string
-      scorePercentage: number
-      totalQuestions: number
-      correctCount: number
-      wrongCount: number
-      skippedCount: number
-      details:
-        - questionId: string
-          userAnswer: number
-          correctAnswer: number
-          isCorrect: boolean
-          explanation: string
-
-  - path: /api/history
-    method: GET
-    description: Retrieve user quiz attempt history logs with optional search query
-    request:
-      searchQuery: string
-      limit: number
-    response:
-      attempts:
-        - attemptId: string
-          quizTitle: string
-          date: string
-          scorePercentage: number
-          correctCount: number
-          totalQuestions: number
-          timeSpentSeconds: number
+services:
+  - name: authService
+    description: Student authentication & session storage
+  - name: txtParserService
+    description: Multi-format TXT parser & explanation generator
+  - name: quizEngineService
+    description: Timed quiz engine & auto-grader
+  - name: historyService
+    description: History logging & attempt reader
+  - name: savedService
+    description: Persistent saved quiz manager (Save, Delete, Re-take)
 ```
 
 ---
 
 ## 2.2 ⛔ Negative Space Boundaries
 
-1. **No External Server Database Dependency**: The initial build MUST be zero-config client-side / local storage backed with smooth mock persistence (LocalStorage / SessionStorage) so it can run immediately without requiring manual server or DB setup.
-2. **No Unvalidated File Upload Crashes**: The TXT parser MUST NOT crash or freeze on invalid/malformed text files; it MUST gracefully catch line syntax errors, show line numbers, and allow partial parsing if valid questions exist.
-3. **No Direct Answer Leak in Client Inspection**: Answer key indexes in active test mode MUST NOT be rendered directly into public DOM dataset attributes before submission to prevent simple developer-console cheating.
-4. **No Unbounded Storage Overflow**: Quiz history entries MUST store compact JSON payloads and trim records beyond 100 historical attempts to avoid exceeding browser LocalStorage quota limits.
-5. **No Mid-Quiz Silent Data Loss**: Browser refresh or navigation events during an active quiz MUST be guarded by a browser warning or restored from transient session state.
-6. **No Editable Inputs in History Review**: History attempt review MUST be strictly read-only; users cannot modify submitted answers, re-grade completed attempts, or tamper with saved history records.
+1. **No External Server Database Dependency**: Client-side LocalStorage / SessionStorage mock persistence.
+2. **No Unvalidated File Upload Crashes**: Syntax line error catching and diagnostics.
+3. **No Direct Answer Leak in Client Inspection**: Answer key obfuscation during active test taking.
+4. **No Unbounded Storage Overflow**: Max 100 entries limit for History & Saved Quizzes.
+5. **No Mid-Quiz Silent Data Loss**: Browser tab refresh/unload guards.
+6. **No Editable Inputs in History Review**: Strictly read-only attempt modal review.
+7. **No Auto-Overriding User Timer Selection**: User timer duration setting on Upload page MUST override auto-generated timing.
 
 ---
 
 # 📝 3. WORK CHECKPOINT MATRIX
 
 ## Task 1: Core Layout & Styling Infrastructure
-- [x] `[NEW]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Implement core design system (dark glassmorphism palette, Google Fonts Inter/Outfit, responsive layout, dynamic badges, countdown ring, card hover effects, toasts).
-- [x] `[NEW]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Construct SPA HTML shell with navbar header, sidebar, dynamic view containers (Auth, Upload, Quiz, Result, History, Profile), modal overlays, and toast containers.
+- [x] `[NEW]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Core design system, glassmorphic layout, modal overlays & toast styles.
+- [x] `[NEW]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): SPA HTML shell with 4 navbar links (Upload, History, Saved Quizzes, Profile), duration selector input & Saved Quizzes view container.
 
-## Task 2: Services Subsystem (Business Logic & Data Layer)
-- [x] `[NEW]` [js/services/authService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/authService.js): Implement student registration, login, mock hash validation, profile updates, and LocalStorage auth session persistence.
-- [x] `[NEW]` [js/services/txtParserService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/txtParserService.js): Implement robust TXT file parser supporting multi-format answer keys (`Đáp án: A`, `ANSWER: A`, `Key: A`), line-by-line validation, error diagnostic logging, and question bank generator.
-- [x] `[NEW]` [js/services/quizEngineService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/quizEngineService.js): Implement quiz session state manager, countdown timer ticker, answer recorder, automatic grading engine, percentage score calculation, and transient session caching.
-- [x] `[NEW]` [js/services/historyService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/historyService.js): Implement quiz attempt persistence, history list retrieval with search filter, detailed attempt review reader, and LocalStorage quota auto-trim (max 100 entries).
+## Task 2: Services Subsystem (Data & Business Logic Layer)
+- [x] `[NEW]` [js/services/authService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/authService.js): Student auth & LocalStorage session persistence.
+- [x] `[NEW]` [js/services/txtParserService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/txtParserService.js): Multi-format TXT parser with automatic correct answer explanation generator.
+- [x] `[NEW]` [js/services/quizEngineService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/quizEngineService.js): Configurable timer session manager & auto-grader.
+- [x] `[NEW]` [js/services/historyService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/historyService.js): History logging & search query reader.
+- [x] `[NEW]` [js/services/savedService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/savedService.js): Saved quiz manager (save, delete, list, re-take).
 
 ## Task 3: Dynamic UI Views Layer
-- [x] `[NEW]` [js/views/authView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/authView.js): Implement login & registration forms controller, input validation feedback, and avatar selection.
-- [x] `[NEW]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Implement drag-and-drop TXT file uploader, raw text paste editor, live syntax check report view, sample file loader, and quiz preview list.
-- [x] `[NEW]` [js/views/quizView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/quizView.js): Implement interactive quiz taking interface with question navigator grid, timer ring countdown, option select cards, auto-submit modal, and page unload guard.
-- [x] `[NEW]` [js/views/resultView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/resultView.js): Implement quiz result scorecard, score percentage gauge, stats breakdown (correct/wrong/skipped), detailed question-by-question review with explanations.
-- [x] `[NEW]` [js/views/historyView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/historyView.js): Implement attempt history table/card list, search filter input, score indicators, and attempt detail review modal viewer.
-- [x] `[NEW]` [js/views/profileView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/profileView.js): Implement student profile view, profile edit form handler, and aggregate statistics overview.
+- [x] `[NEW]` [js/views/authView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/authView.js): Auth forms controller.
+- [x] `[NEW]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Drag&Drop TXT uploader with custom timer duration input.
+- [x] `[NEW]` [js/views/quizView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/quizView.js): Interactive quiz interface with smooth submit navigation.
+- [x] `[NEW]` [js/views/resultView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/resultView.js): Result scorecard & compulsory correct answer explanations.
+- [x] `[NEW]` [js/views/historyView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/historyView.js): History table & modal with "⭐ Lưu Bài Kiểm Tra" action button.
+- [x] `[NEW]` [js/views/savedView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/savedView.js): 4th navbar view "Bài Kiểm Tra Đã Lưu" controller.
+- [x] `[NEW]` [js/views/profileView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/profileView.js): Student profile controller.
 
 ## Task 4: SPA Application Entry & Integration
-- [x] `[NEW]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Bootstrap SPA router, state manager, global view switcher navigation listeners, sample TXT pre-loader, and toast notification system.
+- [x] `[NEW]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Bootstrap SPA router with 4th view route ('saved').

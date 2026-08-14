@@ -7,7 +7,8 @@ class App {
       auth: window.authService,
       txtParser: window.txtParserService,
       quizEngine: window.quizEngineService,
-      history: window.historyService
+      history: window.historyService,
+      saved: window.savedService
     };
 
     this.views = {
@@ -16,6 +17,7 @@ class App {
       quiz: window.quizView,
       result: window.resultView,
       history: window.historyView,
+      saved: window.savedView,
       profile: window.profileView
     };
 
@@ -84,6 +86,8 @@ class App {
       this.views.quiz.renderView();
     } else if (viewName === 'history') {
       this.views.history.renderView();
+    } else if (viewName === 'saved') {
+      this.views.saved.renderView();
     } else if (viewName === 'profile') {
       this.views.profile.renderView();
     } else if (viewName === 'auth') {

@@ -194,12 +194,16 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
       return;
     }
 
+    // Read user configured duration in minutes
+    const durationElem = document.getElementById('quiz-duration-select');
+    const customMinutes = durationElem ? parseInt(durationElem.value, 10) : 15;
+
     // Start active quiz session
     try {
       window.quizEngineService.startSession({
         title: titleInput || 'Bài Trắc Nghiệm TXT',
         questions: parseResult.questions,
-        durationMinutes: Math.max(5, parseResult.questions.length * 2) // 2 mins per question
+        durationMinutes: customMinutes || 15
       });
 
       window.app.showToast(`Bắt đầu làm bài thi "${titleInput}"!`, 'success');
