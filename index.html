@@ -391,6 +391,39 @@ Lời giải: HTML là ngôn ngữ đánh dấu siêu văn bản." oninput="app.
     </main>
   </div>
 
+  <!-- Read-Only History Attempt Inspection Modal Overlay -->
+  <div class="modal-overlay" id="history-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2 style="font-size: 1.25rem; font-family: var(--font-heading);" id="hm-quiz-title">Chi Tiết Lần Làm Bài (Chỉ Xem)</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="hm-date-time">Thời gian: --</span>
+        </div>
+        <button class="btn btn-secondary btn-icon-only" onclick="app.views.history.closeModal()" style="padding: 0.4rem 0.8rem; font-size: 1.2rem;">✖</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; background: rgba(15,23,42,0.6); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+          <div style="text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Điểm Số</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--primary);" id="hm-score">0%</div>
+          </div>
+          <div style="width: 1px; background: var(--glass-border);"></div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Câu Đúng / Tổng</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent-emerald);" id="hm-counts">0 / 0</div>
+          </div>
+        </div>
+
+        <div id="hm-questions-container">
+          <!-- Dynamic Read-Only Review Cards -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="app.views.history.closeModal()">Đóng Cửa Sổ Xem</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 

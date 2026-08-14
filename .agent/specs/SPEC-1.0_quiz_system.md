@@ -1,6 +1,6 @@
 # 📜 SPEC-1.0: Hệ Thống Web Làm Trắc Nghiệm Từ File TXT
 
-> **Status:** PLAN_LOCKED | **Feature:** Web Quiz System with TXT File Parser, Auth, Student Management, Automatic Grading & History
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Web Quiz System with TXT File Parser, Auth, Student Management, Automatic Grading, Read-Only History Review
 
 ---
 
@@ -11,7 +11,7 @@
 - **As a Student / User**, I want to register and log in to the web application so that I can maintain my personal profile and save my quiz history.
 - **As an Instructor / Student**, I want to upload or paste a `.txt` file containing quiz questions so that the system automatically parses and generates interactive multiple-choice tests.
 - **As a Student**, I want to take a timed multiple-choice quiz with immediate auto-grading and score evaluation so that I can test my knowledge efficiently.
-- **As a Student**, I want to review my quiz history and past submission details so that I can track my learning progress over time.
+- **As a Student**, I want to review my quiz history and inspect detailed past attempts in read-only mode (no editing allowed) so that I can track my learning progress without accidental data tampering.
 
 ---
 
@@ -41,12 +41,12 @@ Then the system automatically freezes inputs, evaluates all answered and skipped
 And computes percentage score, correct/wrong/skipped counts, time spent, and detailed answer explanation breakdown
 ```
 
-### Scenario 4: Quiz History, Attempt Review & Search Filtering
+### Scenario 4: Quiz History & Read-Only Attempt Review (No Modification Allowed)
 ```gherkin
-Given a student completes a quiz session
-When the quiz evaluation finishes
-Then the attempt result is saved to the student's local history index with timestamp and score breakdown
-And the student can search, filter, and review past attempts in full detail anytime
+Given a student is viewing their Quiz History list
+When they click "Xem Chi Tiết" on any completed attempt record
+Then a dedicated Read-Only Review interface pops up displaying full questions, user's submitted answers, correct answers, and explanations
+And all option selectors and inputs are strictly read-only and disabled so the student cannot edit or alter past answers
 ```
 
 ### Scenario 5: Page Refresh Resilience Mid-Quiz
@@ -172,6 +172,7 @@ endpoints:
 3. **No Direct Answer Leak in Client Inspection**: Answer key indexes in active test mode MUST NOT be rendered directly into public DOM dataset attributes before submission to prevent simple developer-console cheating.
 4. **No Unbounded Storage Overflow**: Quiz history entries MUST store compact JSON payloads and trim records beyond 100 historical attempts to avoid exceeding browser LocalStorage quota limits.
 5. **No Mid-Quiz Silent Data Loss**: Browser refresh or navigation events during an active quiz MUST be guarded by a browser warning or restored from transient session state.
+6. **No Editable Inputs in History Review**: History attempt review MUST be strictly read-only; users cannot modify submitted answers, re-grade completed attempts, or tamper with saved history records.
 
 ---
 

@@ -1,5 +1,5 @@
 /**
- * HistoryView - Renders student attempt history logs, search filtering, and detailed attempt view triggers.
+ * HistoryView - Renders student attempt history logs, search filtering, and dedicated Read-Only Modal inspection.
  */
 class HistoryView {
   renderView() {
@@ -67,8 +67,93 @@ class HistoryView {
       return;
     }
 
-    window.views.result.renderResult(attempt);
-    window.app.router.navigate('result');
+    // Populate Read-Only Modal
+    document.getElementById('hm-quiz-title').textContent = `${attempt.quizTitle} (Chế độ xem lại - Không thể chỉnh sửa)`;
+    document.getElementById('hm-date-time').textContent = `Ngày làm bài: ${attempt.date}`;
+    document.getElementById('hm-score').textContent = `${attempt.scorePercentage}%`;
+    document.getElementById('hm-counts').textContent = `${attempt.correctCount} / ${attempt.totalQuestions}`;
+
+    const container = document.getElementById('hm-questions-container');
+    container.innerHTML = '';
+
+    const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    attempt.details.forEach((item) => {
+      let cardClass = 'glass-card review-question-card';
+      let statusBadge = '';
+
+      if (item.isCorrect) {
+        cardClass += ' correct';
+        statusBadge = '<span class="badge badge-pass">✔ ĐÚNG</span>';
+      } else if (item.userAnswer === -1) {
+        cardClass += ' skipped';
+        statusBadge = '<span class="badge" style="background: rgba(245,158,11,0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber);">➖ BỎ QUA</span>';
+      } else {
+        cardClass += ' wrong';
+        statusBadge = '<span class="badge badge-fail">✖ SAI</span>';
+      }
+
+      const card = document.createElement('div');
+      card.className = cardClass;
+      card.style.marginBottom = '1rem';
+
+      let optionsHtml = '<div class="options-list" style="margin-top: 0.85rem; pointer-events: none; user-select: none;">';
+      item.options.forEach((optText, optIdx) => {
+        const letter = optionLetters[optIdx] || String(optIdx + 1);
+        const isUserChoice = item.userAnswer === optIdx;
+        const isCorrectChoice = item.correctAnswer === optIdx;
+
+        let optClass = 'option-item';
+        let badgeTag = '';
+
+        if (isCorrectChoice) {
+          optClass += ' selected';
+          badgeTag = '<span style="color: var(--accent-emerald); font-weight: 700; margin-left: auto;">(Đáp án chuẩn)</span>';
+        }
+        if (isUserChoice && !isCorrectChoice) {
+          badgeTag = '<span style="color: var(--accent-rose); font-weight: 700; margin-left: auto;">(Học viên đã chọn)</span>';
+        }
+
+        optionsHtml += `
+          <div class="${optClass}" style="${isUserChoice && !isCorrectChoice ? 'border-color: var(--accent-rose); background: rgba(239, 68, 68, 0.15);' : ''}">
+            <div class="option-letter">${letter}</div>
+            <div class="option-label">${this.escapeHtml(optText)}</div>
+            ${badgeTag}
+          </div>
+        `;
+      });
+      optionsHtml += '</div>';
+
+      let expHtml = '';
+      if (item.explanation) {
+        expHtml = `
+          <div class="explanation-box" style="margin-top: 0.75rem;">
+            💡 <strong>Lời giải / Giải thích:</strong> ${this.escapeHtml(item.explanation)}
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="question-number-badge">CÂU ${item.number}</span>
+          ${statusBadge}
+        </div>
+        <div class="question-text" style="font-size: 1.05rem; margin-bottom: 0.5rem;">${this.escapeHtml(item.questionText)}</div>
+        ${optionsHtml}
+        ${expHtml}
+      `;
+
+      container.appendChild(card);
+    });
+
+    // Show modal
+    const modal = document.getElementById('history-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  closeModal() {
+    const modal = document.getElementById('history-modal');
+    if (modal) modal.classList.remove('active');
   }
 
   escapeHtml(str) {
