@@ -1,5 +1,6 @@
 /**
  * TxtParserService - Parses raw TXT files into structured quiz question banks with error diagnostics.
+ * Supports up to 6 options (A-F), multiple answer key patterns, and multiple sample preset banks.
  */
 class TxtParserService {
   /**
@@ -25,7 +26,7 @@ class TxtParserService {
 
       if (!line) continue; // Skip blank lines
 
-      // 1. Detect Question Header (e.g., "Câu 1: HTML là gì?", "1. HTML là gì?", "Question 1: ...")
+      // 1. Detect Question Header (e.g., "Câu 1:", "Question 1:", "1.", "1)")
       const qHeaderMatch = line.match(/^(?:Câu|Question|\d+[\.\:\)]?)\s*(\d+)[\.\:\)]?\s*(.*)/i);
       
       if (qHeaderMatch) {
@@ -66,24 +67,31 @@ class TxtParserService {
         continue;
       }
 
-      // 2. Detect Options (e.g., "A. Option 1", "B) Option 2", "a. Option")
-      const optMatch = line.match(/^([A-D])[\.\:\)]\s*(.*)/i);
+      // 2. Detect Options (e.g., "A. Option 1", "B) Option 2", "*C. Correct Option")
+      const optMatch = line.match(/^(\*?)\s*([A-F])[\.\:\)]\s*(.*)/i);
       if (optMatch) {
-        const optionText = optMatch[2].trim();
+        const isStarCorrect = optMatch[1] === '*';
+        const optionLetter = optMatch[2].toUpperCase();
+        const optionText = optMatch[3].trim();
+        
         currentQuestion.options.push(optionText);
+        
+        if (isStarCorrect) {
+          currentQuestion.correctAnswerIndex = currentQuestion.options.length - 1;
+        }
         continue;
       }
 
-      // 3. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "ĐÁP ÁN A")
-      const ansMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-D])/i);
+      // 3. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "ĐÁP ÁN: A")
+      const ansMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])/i);
       if (ansMatch) {
         const letter = ansMatch[1].toUpperCase();
-        const charCodeOffset = letter.charCodeAt(0) - 65; // A -> 0, B -> 1, C -> 2, D -> 3
+        const charCodeOffset = letter.charCodeAt(0) - 65; // A -> 0, B -> 1, C -> 2, D -> 3, E -> 4, F -> 5
         currentQuestion.correctAnswerIndex = charCodeOffset;
         continue;
       }
 
-      // 4. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...")
+      // 4. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "Explanation: ...")
       const expMatch = line.match(/^(?:Lời\s*giải|Giải\s*thích|Explanation)[\:\s]+(.*)/i);
       if (expMatch) {
         currentQuestion.explanation = expMatch[1].trim();
@@ -130,7 +138,7 @@ class TxtParserService {
   }
 
   /**
-   * Generates a sample formatted TXT text string for demo testing.
+   * Generates a sample formatted TXT text string for demo testing (Preset 1: IT & Web).
    */
   getSampleTxtContent() {
     return `Câu 1: Ngôn ngữ lập trình nào phổ biến nhất cho phát triển Web Frontend?
