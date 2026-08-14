@@ -6,6 +6,18 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-14 — Eurus Quiz Master v2.0 Enhanced Release (`SPEC-1.0_quiz_system.md`)
+- **Milestone:** Eurus Quiz Master v2.0 Shipped (Custom Timer, Saved Quizzes View, Read-Only History Review & Compulsory Answer Explanations).
+- **Features Implemented:**
+  1. **Configurable Quiz Duration Selector** (`uploadView.js`, `index.html`): Added user duration selector (5 to 90 mins) on main Upload page.
+  2. **Modal "⭐ Lưu Bài Kiểm Tra Này" Action** (`historyView.js`, `index.html`): Replaced modal close button with Save Quiz action.
+  3. **4th Navbar View "⭐ Bài Kiểm Tra Đã Lưu"** (`savedService.js`, `savedView.js`, `index.html`): Dedicated saved quizzes revision hub with re-take & delete actions.
+  4. **Compulsory Correct Answer Explanations** (`historyView.js`): Mandatory correct answer explanations rendered under every question in history review.
+  5. **Seamless Submission Navigation Fix** (`quizView.js`, `profileView.js`): Fixed object reference to ensure instant transition from active quiz submit to result scorecard view.
+- **Verification & Checksum:** 100% Pass (`15/15` files verified). SHA256: `38A6CCF90CFA5BD6AD3C4B869A59BD02D88EE6E72D3F982AC1BA44E178DF4213`.
+
+---
+
 ### 2026-08-14 — Phase 1: Core Web Quiz System Released (`SPEC-1.0`)
 - **Milestone:** Full Web Quiz System with TXT File Parser, Auth, Student Management, Automatic Grading & History.
 - **Features Implemented:**

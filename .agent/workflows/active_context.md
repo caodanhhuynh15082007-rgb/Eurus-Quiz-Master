@@ -1,10 +1,10 @@
 ---
-status: TEST_PASSED
-active_phase: "Phase 1: Core Web Quiz System (v2.0 Enhanced)"
-active_feature: "SPEC-1.0: Custom Timer, Saved Quizzes View, Read-Only History Review & Compulsory Explanations"
+status: IDLE
+active_phase: "Phase 1 Completed & Shipped (v2.0 Released)"
+active_feature: "Phase 2: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-1.0_quiz_system.md"
-last_commit: "7abcb67"
-last_test_status: "PASS (15/15 Files Verified & Syntax Validated)"
+last_commit: "1e64691"
+last_test_status: "PASS (All DoD Requirements Met)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-14 | **Status:** All System Verification Tests Passed (`/test` Complete)
+> **Last Checkpoint:** 2026-08-14 | **Status:** Eurus Quiz Master v2.0 Fully Shipped (`1e64691`)
 
 ---
 
@@ -38,13 +38,12 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-14 — Full System Verification (`/test`)
-- **Status:** PASS (15/15 Files Verified).
-- **Verified Components:**
-  1. `index.html` (4th navbar view "Bài Kiểm Tra Đã Lưu", timer duration input, History modal save button)
-  2. `styles.css` (Glassmorphism layout, modal overlays & toast animations)
-  3. `savedService.js` & `savedView.js` (Saved quiz persistence, revision re-take & delete)
-  4. `uploadView.js` (Custom quiz timer duration in minutes)
-  5. `historyView.js` (Compulsory correct answer explanations for all questions & modal save trigger)
-  6. `app.js` (SPA Router with 4th view navigation)
-- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
+### Session 2026-08-14 — Eurus Quiz Master v2.0 Release (`/ship`)
+- **Status:** IDLE (Phase 1 & 4 Enhancements 100% Shipped).
+- **Spec Checksum:** `38A6CCF90CFA5BD6AD3C4B869A59BD02D88EE6E72D3F982AC1BA44E178DF4213`
+- **Git Release Commit:** [`1e64691`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Shipped in v2.0:**
+  1. Configurable quiz timer duration selector (5 to 90 mins).
+  2. Modal "⭐ Lưu Bài Kiểm Tra Này" action.
+  3. 4th Navbar view "⭐ Bài Kiểm Tra Đã Lưu" with revision re-take functionality.
+  4. Compulsory correct answer explanations for all questions in history review.
