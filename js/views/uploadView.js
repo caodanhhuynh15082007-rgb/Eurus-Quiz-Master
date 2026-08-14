@@ -1,5 +1,5 @@
 /**
- * UploadView - Handles TXT file drag-and-drop, text parsing preview, syntax diagnostics, and sample preset loading.
+ * UploadView - Handles TXT file drag-and-drop, text parsing preview, syntax diagnostics, and multiple sample presets.
  */
 class UploadView {
   constructor() {
@@ -73,16 +73,64 @@ class UploadView {
     reader.readAsText(file, 'UTF-8');
   }
 
-  loadSampleQuiz() {
-    const sampleTxt = window.txtParserService.getSampleTxtContent();
+  loadSampleQuiz(presetType = 'it') {
+    let sampleTxt = '';
+    let title = '';
+
+    if (presetType === 'english') {
+      title = 'Đề Thi Mẫu Tiếng Anh Công Sở (Grammar & Vocab)';
+      sampleTxt = `Question 1: Select the correct word to complete the sentence: "The meeting has been _______ to next Monday."
+A. postponed
+B. cancelled
+C. arrived
+D. renewed
+Answer: A
+Explanation: "Postponed" means delayed or pushed back to a later date.
+
+Question 2: What is the synonym of the word "EFFICIENT"?
+A. Slow
+B. Productive
+C. Lazy
+D. Confused
+Answer: B
+Explanation: Productive and efficient both describe achieving high output with minimum wasted effort.
+
+Question 3: Choose the correct preposition: "She is responsible _______ managing the new project."
+A. at
+B. for
+C. with
+D. in
+Answer: B
+Explanation: The phrase "responsible for" is standard English usage.
+
+Question 4: Identify the correct sentence structure:
+A. Seldom we have seen such impressive results.
+B. Seldom have we seen such impressive results.
+C. Seldom we seen such impressive results.
+D. Have we seldom seen such impressive results.
+Answer: B
+Explanation: Inversion occurs after negative frequency adverbs like "Seldom".
+
+Question 5: What does "ASAP" stand for in business communication?
+A. As Soon As Possible
+B. As Simple As Planned
+C. Always Save All Documents
+D. After System Auto Processing
+Answer: A
+Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possible".`;
+    } else {
+      title = 'Đề Thi Mẫu Kiến Thức Công Nghệ Thông Tin (5 câu)';
+      sampleTxt = window.txtParserService.getSampleTxtContent();
+    }
+
     const textArea = document.getElementById('raw-txt-input');
     const titleInput = document.getElementById('quiz-title-input');
 
     if (textArea) textArea.value = sampleTxt;
-    if (titleInput) titleInput.value = 'Đề Thi Mẫu Kiến Thức Công Nghệ Thông Tin';
+    if (titleInput) titleInput.value = title;
 
     this.handleLiveValidation();
-    window.app.showToast('Đã nạp đề trắc nghiệm mẫu CNTT (5 câu)!', 'info');
+    window.app.showToast(`Đã nạp đề trắc nghiệm mẫu: ${title}!`, 'info');
   }
 
   handleLiveValidation() {
