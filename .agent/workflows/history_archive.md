@@ -6,6 +6,15 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-15 — Eurus Quiz Master v3.1 Release (`SPEC-2.0_ai_quiz_generator.md`)
+- **Milestone:** Eurus Quiz Master v3.1 Shipped (Custom AI Duration Controls inside AI Generator Card & Bi-directional Sync).
+- **Features Implemented:**
+  1. **AI Custom Quiz Duration Inputs** (`index.html`): Added `#ai-duration-value` and `#ai-duration-unit` (**Giây / Phút / Giờ**) directly inside `#ai-generator-card`.
+  2. **Bi-directional Duration Sync** (`uploadView.js`): Added `setupDurationSync()` with `isSyncing` re-entry protection, seamlessly syncing timer settings between the AI card and the TXT card in real-time.
+- **Verification & Checksum:** 100% Pass (`17/17` files verified). SHA256: `129D722D35B88B52C6D1BF450920AB23C0E0DE94290255CB1B9B1F16969BAC2E`.
+
+---
+
 ### 2026-08-15 — Eurus Quiz Master v3.0 Release (`SPEC-2.0_ai_quiz_generator.md`)
 - **Milestone:** Eurus Quiz Master v3.0 Shipped (AI Quiz Generator via Google AI Studio API Key).
 - **Features Implemented:**

@@ -1,10 +1,10 @@
 ---
-status: TEST_PASSED
-active_phase: "Phase 2: AI Quiz Generator via Google AI Studio API Key"
-active_feature: "SPEC-2.0: AI Quiz Generator with Custom AI Duration Timer Control"
+status: IDLE
+active_phase: "Phase 2 Completed & Shipped (v3.1 Master Release)"
+active_feature: "Phase 3: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "cb4f20b"
-last_test_status: "PASS (17/17 System Files Verified & Validated)"
+last_commit: "fe2af4b"
+last_test_status: "PASS (All DoD Requirements Met)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** All Verification Tests Passed (`/test` Complete)
+> **Last Checkpoint:** 2026-08-15 | **Status:** Eurus Quiz Master v3.1 Fully Shipped (`fe2af4b`)
 
 ---
 
@@ -38,11 +38,10 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Full System Verification (`/test`)
-- **Status:** PASS (17/17 Files Verified).
-- **Verified Components:**
-  1. `index.html` (Added `#ai-duration-value` & `#ai-duration-unit` to `#ai-generator-card`)
-  2. `uploadView.js` (`setupDurationSync()` with `isSyncing` guard for bi-directional timer synchronization)
-  3. `aiService.js` (Google Gemini REST API client with API Key validation & Markdown stripper)
-  4. `app.js` (`window.aiService` registered in SPA router)
-- **Next Step:** Run `/review` or `/ship` to finalize checkpoint.
+### Session 2026-08-15 — Eurus Quiz Master v3.1 Release (`/ship`)
+- **Status:** IDLE (All Phase 2 Features 100% Shipped).
+- **Spec Checksum:** `129D722D35B88B52C6D1BF450920AB23C0E0DE94290255CB1B9B1F16969BAC2E`
+- **Git Release Commit:** [`fe2af4b`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Shipped in v3.1:**
+  1. Thêm 2 ô điều chỉnh thời gian thi độc lập trong Thẻ **✨ Tạo Đề Thi Bằng AI Studio** (`#ai-duration-value` & `#ai-duration-unit`).
+  2. Cơ chế đồng bộ hai chiều (Bi-directional Sync) tức thì giữa Thẻ AI và Thẻ TXT Editor.
