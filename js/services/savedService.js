@@ -7,9 +7,15 @@ class SavedService {
     this.MAX_SAVED = 100;
   }
 
+  getStorageEngine(isOfficial = false) {
+    return isOfficial ? localStorage : sessionStorage;
+  }
+
   getSavedQuizzes(userId = null, searchQuery = '') {
     try {
-      const raw = localStorage.getItem(this.STORAGE_KEY_SAVED);
+      const isOfficial = window.authService && window.authService.isOfficialUser();
+      const storage = this.getStorageEngine(isOfficial);
+      const raw = storage.getItem(this.STORAGE_KEY_SAVED);
       let list = raw ? JSON.parse(raw) : [];
 
       if (userId) {
@@ -25,12 +31,14 @@ class SavedService {
 
       return list.sort((a, b) => (b.savedTimestamp || 0) - (a.savedTimestamp || 0));
     } catch (e) {
-      console.error('Error reading saved quizzes:', e);
+      console.error('Error reading saved quizzes from Storage:', e);
       return [];
     }
   }
 
   saveQuiz(attempt, user = null) {
+    const isOfficial = !!(user && user.isOfficial) || (window.authService && window.authService.isOfficialUser());
+    const storage = this.getStorageEngine(isOfficial);
     const list = this.getSavedQuizzes();
     
     // Check if already saved
@@ -67,14 +75,16 @@ class SavedService {
       list.length = this.MAX_SAVED;
     }
 
-    localStorage.setItem(this.STORAGE_KEY_SAVED, JSON.stringify(list));
+    storage.setItem(this.STORAGE_KEY_SAVED, JSON.stringify(list));
     return savedRecord;
   }
 
   deleteSavedQuiz(savedId) {
+    const isOfficial = window.authService && window.authService.isOfficialUser();
+    const storage = this.getStorageEngine(isOfficial);
     const list = this.getSavedQuizzes();
     const filtered = list.filter(item => item.savedId !== savedId);
-    localStorage.setItem(this.STORAGE_KEY_SAVED, JSON.stringify(filtered));
+    storage.setItem(this.STORAGE_KEY_SAVED, JSON.stringify(filtered));
     return true;
   }
 }

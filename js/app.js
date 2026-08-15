@@ -5,6 +5,7 @@ class App {
   constructor() {
     this.services = {
       auth: window.authService,
+      telegramAuth: window.telegramAuthService,
       txtParser: window.txtParserService,
       quizEngine: window.quizEngineService,
       history: window.historyService,

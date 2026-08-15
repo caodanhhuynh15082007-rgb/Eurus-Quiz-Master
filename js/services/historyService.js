@@ -7,9 +7,15 @@ class HistoryService {
     this.MAX_HISTORY_ENTRIES = 100;
   }
 
+  getStorageEngine(isOfficial = false) {
+    return isOfficial ? localStorage : sessionStorage;
+  }
+
   getAttempts(userId = null, searchQuery = '') {
     try {
-      const raw = localStorage.getItem(this.STORAGE_KEY_HISTORY);
+      const isOfficial = window.authService && window.authService.isOfficialUser();
+      const storage = this.getStorageEngine(isOfficial);
+      const raw = storage.getItem(this.STORAGE_KEY_HISTORY);
       let attempts = raw ? JSON.parse(raw) : [];
 
       if (userId) {
@@ -27,18 +33,22 @@ class HistoryService {
       // Sort newest first
       return attempts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
     } catch (e) {
-      console.error('Error loading history from LocalStorage:', e);
+      console.error('Error loading history from Storage:', e);
       return [];
     }
   }
 
   saveAttempt(attemptResult, user = null) {
+    const isOfficial = !!(user && user.isOfficial) || (window.authService && window.authService.isOfficialUser());
+    const storage = this.getStorageEngine(isOfficial);
+    
     const attempts = this.getAttempts();
     
     const record = {
       ...attemptResult,
       userId: user ? user.id : 'guest',
-      username: user ? user.username : 'Khách'
+      username: user ? user.username : 'Khách',
+      isOfficial
     };
 
     attempts.unshift(record);
@@ -49,12 +59,12 @@ class HistoryService {
     }
 
     try {
-      localStorage.setItem(this.STORAGE_KEY_HISTORY, JSON.stringify(attempts));
+      storage.setItem(this.STORAGE_KEY_HISTORY, JSON.stringify(attempts));
     } catch (e) {
-      console.warn('LocalStorage full, attempting emergency trim:', e);
+      console.warn('Storage full, attempting emergency trim:', e);
       // Emergency trim to 30 items
       attempts.length = Math.min(attempts.length, 30);
-      localStorage.setItem(this.STORAGE_KEY_HISTORY, JSON.stringify(attempts));
+      storage.setItem(this.STORAGE_KEY_HISTORY, JSON.stringify(attempts));
     }
 
     return record;

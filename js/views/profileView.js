@@ -8,6 +8,8 @@ class ProfileView {
     const nameInput = document.getElementById('prof-fullname');
     const emailInput = document.getElementById('prof-email');
     const usernameInput = document.getElementById('prof-username');
+    const phoneInput = document.getElementById('prof-phone');
+    const telegramInput = document.getElementById('prof-telegram');
     const displayAvatar = document.getElementById('profile-avatar-lg');
     const displayName = document.getElementById('prof-display-name');
     const displayStatus = document.getElementById('prof-display-status');
@@ -16,16 +18,26 @@ class ProfileView {
       if (nameInput) nameInput.value = currentUser.fullname || '';
       if (emailInput) emailInput.value = currentUser.email || '';
       if (usernameInput) usernameInput.value = currentUser.username || '';
+      if (phoneInput) phoneInput.value = currentUser.phone || '';
+      if (telegramInput) telegramInput.value = currentUser.telegramUser || '';
       if (displayName) displayName.textContent = currentUser.fullname || currentUser.username;
       if (displayAvatar) displayAvatar.textContent = (currentUser.fullname || currentUser.username).charAt(0).toUpperCase();
-      if (displayStatus) displayStatus.textContent = 'Học viên chính thức';
+      if (displayStatus) {
+        if (currentUser.isOfficial) {
+          displayStatus.innerHTML = '<span class="badge badge-official">✔ Học viên chính thức (Telegram Verified)</span>';
+        } else {
+          displayStatus.innerHTML = '<span class="badge badge-guest">Học viên thường (Chưa xác thực OTP)</span>';
+        }
+      }
     } else {
       if (nameInput) nameInput.value = 'Khách Vãng Lai';
       if (emailInput) emailInput.value = 'khach@eurus.edu.vn';
       if (usernameInput) usernameInput.value = 'khach';
+      if (phoneInput) phoneInput.value = 'Chưa đăng nhập';
+      if (telegramInput) telegramInput.value = 'Chưa liên kết';
       if (displayName) displayName.textContent = 'Khách Vãng Lai';
       if (displayAvatar) displayAvatar.textContent = 'G';
-      if (displayStatus) displayStatus.textContent = 'Chưa đăng nhập';
+      if (displayStatus) displayStatus.innerHTML = '<span class="badge badge-guest">⚠️ Chế độ Khách (F5 xóa sạch dữ liệu)</span>';
     }
 
     // Render Stats Overview
@@ -45,9 +57,11 @@ class ProfileView {
 
     const fullname = document.getElementById('prof-fullname').value;
     const email = document.getElementById('prof-email').value;
+    const phone = document.getElementById('prof-phone') ? document.getElementById('prof-phone').value : '';
+    const telegramUser = document.getElementById('prof-telegram') ? document.getElementById('prof-telegram').value : '';
 
     try {
-      window.authService.updateProfile({ fullname, email });
+      window.authService.updateProfile({ fullname, email, phone, telegramUser });
       window.authView.renderUserBadge();
       this.renderView();
       window.app.showToast('Đã lưu thông tin hồ sơ học viên thành công!', 'success');

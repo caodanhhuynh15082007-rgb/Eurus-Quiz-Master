@@ -8,15 +8,18 @@ class AuthService {
     this.initDefaultAdmin();
   }
 
-  // Seed a default student account for instant demo use
+  // Seed a default official student account for instant demo use
   initDefaultAdmin() {
     const users = this.getAllUsers();
     if (users.length === 0) {
       const demoStudent = {
-        id: 'user_' + Date.now(),
+        id: 'user_official_1',
         username: 'hocvien',
         email: 'hocvien@eurus.edu.vn',
         fullname: 'Nguyễn Văn Học Viên',
+        phone: '0901234567',
+        telegramUser: '@hocvien_eurus',
+        isOfficial: true,
         passwordHash: this.hashPassword('123456'),
         createdAt: new Date().toISOString()
       };
@@ -45,7 +48,7 @@ class AuthService {
     }
   }
 
-  register({ username, email, password, fullname }) {
+  register({ username, email, password, fullname, isOfficial = false, telegramUser = '', phone = '' }) {
     const users = this.getAllUsers();
     const cleanUsername = username.trim().toLowerCase();
     const cleanEmail = email.trim().toLowerCase();
@@ -61,6 +64,9 @@ class AuthService {
       username: cleanUsername,
       email: cleanEmail,
       fullname: fullname.trim(),
+      phone: (phone || '').trim(),
+      telegramUser: (telegramUser || '').trim(),
+      isOfficial: !!isOfficial,
       passwordHash: this.hashPassword(password),
       createdAt: new Date().toISOString()
     };
@@ -99,12 +105,20 @@ class AuthService {
     }
   }
 
+  isOfficialUser() {
+    const user = this.getCurrentUser();
+    return !!(user && user.isOfficial);
+  }
+
   setSession(user) {
     const sessionData = {
       id: user.id,
       username: user.username,
       email: user.email,
       fullname: user.fullname,
+      phone: user.phone || '',
+      telegramUser: user.telegramUser || '',
+      isOfficial: !!user.isOfficial,
       loginAt: new Date().toISOString()
     };
     localStorage.setItem(this.STORAGE_KEY_SESSION, JSON.stringify(sessionData));
@@ -114,7 +128,7 @@ class AuthService {
     localStorage.removeItem(this.STORAGE_KEY_SESSION);
   }
 
-  updateProfile({ fullname, email }) {
+  updateProfile({ fullname, email, phone = '', telegramUser = '' }) {
     const currentUser = this.getCurrentUser();
     if (!currentUser) throw new Error('Vui lòng đăng nhập trước khi cập nhật hồ sơ!');
 
@@ -124,11 +138,15 @@ class AuthService {
     if (userIndex !== -1) {
       users[userIndex].fullname = fullname.trim();
       users[userIndex].email = email.trim().toLowerCase();
+      if (phone) users[userIndex].phone = phone.trim();
+      if (telegramUser) users[userIndex].telegramUser = telegramUser.trim();
       localStorage.setItem(this.STORAGE_KEY_USERS, JSON.stringify(users));
 
       // Update active session
       currentUser.fullname = users[userIndex].fullname;
       currentUser.email = users[userIndex].email;
+      currentUser.phone = users[userIndex].phone;
+      currentUser.telegramUser = users[userIndex].telegramUser;
       localStorage.setItem(this.STORAGE_KEY_SESSION, JSON.stringify(currentUser));
     }
     return currentUser;
