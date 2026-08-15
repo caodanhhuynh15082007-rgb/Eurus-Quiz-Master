@@ -1,6 +1,6 @@
 # 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key
 
-> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** AI Quiz Generation with Google AI Studio (Gemini Flash API)
+> **Status:** SPEC_PLANNED | **Feature:** AI Quiz Generation with Google AI Studio (Gemini Flash API)
 
 ---
 
@@ -61,7 +61,7 @@ services:
   - name: aiService
     description: Direct Google Gemini REST API client (`gemini-1.5-flash` / `gemini-2.0-flash`)
     methods:
-      - validateApiKey(apiKey): Promise<boolean>
+      - validateApiKey(apiKey): Promise<{ valid: boolean, error?: string }>
       - generateQuizContent({ apiKey, topic, count, difficulty, language }): Promise<string>
   - name: uploadView
     description: Extended with AI Generator Card, API Key Configurator modal/drawer, and generation status indicator
@@ -75,3 +75,18 @@ services:
 2. **No Plaintext API Key Exposure**: The API key input MUST use password obfuscation (`type="password"` with show/hide toggle), stored in browser `LocalStorage`, and NEVER sent to any third-party server other than official `googleapis.com`.
 3. **No UI Freezing or Silent Failures**: AI generation MUST run asynchronously with a clear loading spinner/progress animation and a 30-second `AbortController` timeout safety guard.
 4. **No Unsanitized Markdown Block Leak**: AI responses wrapped in Markdown block fences (` ```txt ... ``` `) MUST be automatically stripped before TXT parsing.
+
+---
+
+# 📝 3. WORK CHECKPOINT MATRIX
+
+## Task 1: Core AI Service Component
+- [ ] `[NEW]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Google Gemini REST API client with API Key validation, model endpoint fallback (`gemini-1.5-flash` / `gemini-2.0-flash`), prompt builder, Markdown code fence stripper, and 30s AbortController guard.
+
+## Task 2: UI Layout & Styling Enhancements
+- [ ] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add `#ai-config-modal` overlay with password input `#ai-api-key-input`, toggle visibility button, API test ping button, and AI Generator Card `#ai-generator-card` on the Upload page.
+- [ ] `[MODIFY]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Add styles for AI Generator Card, glowing gradient border `.ai-generator-card`, glowing action button `.btn-ai-glow`, and status badges.
+
+## Task 3: Dynamic Views & Router Integration
+- [ ] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Bind AI Config modal listeners, API Key test ping controller, AI Quiz generation click handler with live spinner status, and auto-hydration into TXT editor.
+- [ ] `[MODIFY]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Register `window.aiService` into SPA application registry.

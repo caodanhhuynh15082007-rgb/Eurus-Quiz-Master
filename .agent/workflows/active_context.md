@@ -1,10 +1,10 @@
 ---
-status: SPEC_DRAFTED
+status: SPEC_CHALLENGED_AND_LOCKED
 active_phase: "Phase 2: AI Quiz Generator via Google AI Studio API Key"
 active_feature: "SPEC-2.0: AI Quiz Generator with Google AI Studio (Gemini API)"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "7c10a09"
-last_test_status: "PASS (SPEC-2.0 Drafted & Committed)"
+last_commit: "203095c"
+last_test_status: "PASS (SPEC-2.0 Audited & Locked)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** SPEC-2.0 AI Quiz Generator Drafted (`7c10a09`)
+> **Last Checkpoint:** 2026-08-15 | **Status:** SPEC-2.0 Audited & Locked (`203095c`)
 
 ---
 
@@ -38,12 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — SPEC-2.0 Drafted (`/spec`)
-- **Feature Contract:** [`SPEC-2.0_ai_quiz_generator.md`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)
-- **Status:** SPEC_DRAFTED.
-- **Scope:**
-  1. **Google AI Studio API Key Configuration Card**: Secure input field (`type="password"`), LocalStorage storage, and validation test button (`🧪 Kiểm Tra API Key`).
-  2. **AI Quiz Generator Panel**: Form inputs for Topic, Question Count (5-20), Difficulty (Dễ/Trung Bình/Khó), Language (Tiếng Việt/Tiếng Anh), and glowing action button `✨ Tạo Đề Thi Bằng AI Studio`.
-  3. **Direct Gemini REST API Client (`aiService.js`)**: Communicates with Google AI Studio Gemini API (`gemini-1.5-flash` / `gemini-2.0-flash`), enforcing structured TXT quiz format output with complete `Lời giải:` lines for every question.
-  4. **3 Negative Space Protection Boundaries**: Client-side REST API only, zero key leakage, 30s abort timeout guard.
-- **Next Step:** Run `/challenge` to stress-test architecture & edge-case risks.
+### Session 2026-08-15 — SPEC-2.0 Audited & Locked (`/challenge`)
+- **Spec File:** [`SPEC-2.0_ai_quiz_generator.md`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)
+- **Status:** SPEC_CHALLENGED_AND_LOCKED.
+- **Audit Stress-Tests Resolved:**
+  1. Markdown Code Fence Stripper: Automatically strips ````txt ... ```` block wrappers from Gemini responses.
+  2. Model Fallback & AbortController: Dual endpoint fallback (`gemini-1.5-flash` / `gemini-2.0-flash`) with 30s timeout guard.
+  3. Obfuscated API Key Persistence: Obfuscated API key stored securely in LocalStorage.
+- **Next Step:** Run `/plan` to generate Technical Architecture & Hierarchical Work Matrix.
