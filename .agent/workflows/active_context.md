@@ -1,9 +1,9 @@
 ---
 status: IDLE
-active_phase: "Phase 2 Completed & Shipped (v3.3 Master Release)"
+active_phase: "Phase 2 Completed & Shipped (v3.4 Master Release - Bilingual TXT Support)"
 active_feature: "Phase 3: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "c8b528d"
+last_commit: "69fc4e0"
 last_test_status: "PASS (All 17 System Files Saved & Verified)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** Eurus Quiz Master v3.3 Saved & Committed (`c8b528d`)
+> **Last Checkpoint:** 2026-08-15 | **Status:** Eurus Quiz Master v3.4 Shipped (`69fc4e0`)
 
 ---
 
@@ -38,7 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Final Teardown Save (`/save`)
-- **Status:** IDLE (All Web Features Saved & Verified).
-- **Git Commit:** [`c8b528d`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **All 17 Application Files Verified & Saved.**
+### Session 2026-08-15 — Release v3.4 (`/ship`)
+- **Status:** IDLE (Bilingual English TXT Format Shipped & Tested).
+- **Git Commit:** [`69fc4e0`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Features Added:**
+  - Full English TXT Parser support (`Question 1:`, `Answer:`, `Explain/Solution:`, `Ans:`, `Key:`, `Reason:`, `Note:`).
+  - Preset 2 Sample English Business & Grammar questions.
+  - Gemini AI Generator English prompt synchronization.
+  - Smart English Context Fallback for explanations.
