@@ -1,6 +1,6 @@
 # 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key
 
-> **Status:** SPEC_DRAFTED | **Feature:** AI Quiz Generation with Google AI Studio (Gemini Flash API)
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** AI Quiz Generation with Google AI Studio (Gemini Flash API)
 
 ---
 
@@ -21,7 +21,7 @@
 ```gherkin
 Given a user is on the main Upload page or Settings panel
 When they input their Google AI Studio API Key (e.g., "AIzaSy...") and click "🧪 Kiểm Tra API Key"
-Then the system sends a lightweight test ping to the Google Gemini API REST endpoint (`gemini-1.5-flash` or `gemini-2.0-flash`)
+Then the system sends a lightweight test ping to the Google Gemini API REST endpoint (`gemini-1.5-flash` / `gemini-2.0-flash`)
 And if valid, saves the key securely in LocalStorage (`eurus_ai_studio_api_key`) and displays a "API Key Hợp Lệ" green badge
 ```
 
@@ -34,10 +34,10 @@ Then the system constructs a structured prompt ordering Gemini to return a valid
 And streams/fetches the response, parsing it directly into the TXT editor with a success toast notification
 ```
 
-### Scenario 3: AI Output Parsing & Direct Quiz Taker Hydration
+### Scenario 3: AI Output Sanitization & Direct Quiz Taker Hydration
 ```gherkin
-Given Gemini AI returns the generated quiz content in TXT format
-When the system parses the AI response through `txtParserService`
+Given Gemini AI returns the generated quiz content (potentially wrapped in Markdown code fences ````txt ... ````)
+When `aiService` automatically strips Markdown code fences and parses the TXT response through `txtParserService`
 Then it validates that every question includes question text, 4 options (A-D), an answer key (`Đáp án: X`), and a detailed textual explanation (`Lời giải: ...`)
 And populates the TXT textarea preview and enables the "🚀 Bắt Đầu Làm Bài Trắc Nghiệm" button instantly
 ```
@@ -73,4 +73,5 @@ services:
 
 1. **No Backend Proxy Dependency**: The app MUST communicate directly with Google AI Studio Gemini API (`generativelanguage.googleapis.com`) using client-side `fetch()` without requiring a backend Node.js/Python proxy server.
 2. **No Plaintext API Key Exposure**: The API key input MUST use password obfuscation (`type="password"` with show/hide toggle), stored in browser `LocalStorage`, and NEVER sent to any third-party server other than official `googleapis.com`.
-3. **No UI Freezing or Silent Failures**: AI generation MUST run asynchronously with a clear loading spinner/progress animation and a 30-second abort timeout safety guard.
+3. **No UI Freezing or Silent Failures**: AI generation MUST run asynchronously with a clear loading spinner/progress animation and a 30-second `AbortController` timeout safety guard.
+4. **No Unsanitized Markdown Block Leak**: AI responses wrapped in Markdown block fences (` ```txt ... ``` `) MUST be automatically stripped before TXT parsing.
