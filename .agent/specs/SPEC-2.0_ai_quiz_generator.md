@@ -1,6 +1,6 @@
 # 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key & Universal Key Acceptance
 
-> **Status:** SPEC_PLANNED | **Feature:** Universal Google AI Studio API Key Acceptance & Multi-Endpoint Resilience
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Universal Google AI Studio API Key Acceptance & Multi-Endpoint Resilience
 
 ---
 

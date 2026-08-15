@@ -1,10 +1,10 @@
 ---
-status: IDLE
-active_phase: "Phase 2 Completed & Shipped (v3.1 Master Release)"
-active_feature: "Phase 3: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
+status: SPEC_PLANNED
+active_phase: "Phase 2: AI Quiz Generator via Google AI Studio API Key"
+active_feature: "SPEC-2.0: Universal Google AI Studio API Key Acceptance & Model Discovery"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "05149f9"
-last_test_status: "PASS (All 17 System Files Saved & Verified)"
+last_commit: "5151f18"
+last_test_status: "PASS (Universal Key Plan Locked)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** Eurus Quiz Master v3.1 Saved & Committed (`05149f9`)
+> **Last Checkpoint:** 2026-08-15 | **Status:** Universal API Key Acceptance Planned (`5151f18`)
 
 ---
 
@@ -38,7 +38,10 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Final Teardown Save (`/save`)
-- **Status:** IDLE (All Web Features Saved & Verified).
-- **Git Commit:** [`05149f9`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
-- **All 17 Application Files Verified & Saved.**
+### Session 2026-08-15 — Universal API Key Acceptance Plan (`/plan`)
+- **Spec File:** [`SPEC-2.0_ai_quiz_generator.md`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)
+- **Status:** SPEC_PLANNED.
+- **Task Tree Matrix:**
+  - **Task 1: Universal AI Service Upgrade**: Dynamic model discovery via `GET /v1beta/models`, sanitize API key input, multi-tier fallback list (12+ models), Vietnamese error translator.
+  - **Task 2: UI & Feedback Enhancements**: Input paste sanitization, active model detection badge in UI modal.
+- **Next Step:** Run `/build` to execute code implementation.
