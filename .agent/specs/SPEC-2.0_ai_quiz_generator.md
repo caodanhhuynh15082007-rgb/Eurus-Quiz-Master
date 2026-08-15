@@ -1,6 +1,6 @@
 # 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key & Custom AI Duration Control
 
-> **Status:** SPEC_PLANNED | **Feature:** AI Quiz Generation with Custom Timer Controls (Gemini Flash API)
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** AI Quiz Generation with Custom Timer Controls (Gemini Flash API)
 
 ---
 
@@ -50,12 +50,12 @@ Then the system catches the exception without freezing the UI
 And displays an actionable, human-readable error toast (e.g., "API Key không hợp lệ hoặc đã vượt quá hạn ngạch (quota) của Google AI Studio!")
 ```
 
-### Scenario 5: Custom Quiz Duration Timer Control Inside AI Generator Card
+### Scenario 5: Custom Quiz Duration Timer Control Inside AI Generator Card & Bi-directional Sync
 ```gherkin
 Given a user is inside the AI Studio Quiz Generator Card (`#ai-generator-card`)
 When they adjust the duration number field (`#ai-duration-value`) or unit dropdown (`#ai-duration-unit`: Giây / Phút / Giờ)
-Then the system updates the quiz duration configuration
-And syncs seamlessly with the main TXT timer controls so the quiz session timer reflects the user's exact duration setting
+Then the system validates non-negative input and instantly syncs bi-directionally with the main TXT duration controls
+And when the quiz session starts, the timer ticker executes for the exact specified total seconds
 ```
 
 ---
@@ -83,6 +83,7 @@ services:
 2. **No Plaintext API Key Exposure**: The API key input MUST use password obfuscation (`type="password"` with show/hide toggle), stored in browser `LocalStorage`, and NEVER sent to any third-party server other than official `googleapis.com`.
 3. **No UI Freezing or Silent Failures**: AI generation MUST run asynchronously with a clear loading spinner/progress animation and a 30-second `AbortController` timeout safety guard.
 4. **No Unsanitized Markdown Block Leak**: AI responses wrapped in Markdown block fences (` ```txt ... ``` `) MUST be automatically stripped before TXT parsing.
+5. **No Duration Sync Desynchronization**: Timer inputs between the TXT Editor Card and AI Generator Card MUST remain 100% in sync without infinite listener loops.
 
 ---
 
