@@ -1,5 +1,6 @@
 /**
- * UploadView - Handles TXT file drag-and-drop, text parsing preview, syntax diagnostics, and multiple sample presets.
+ * UploadView - Handles TXT file drag-and-drop, text parsing preview, syntax diagnostics, multiple sample presets,
+ * and AI Quiz Generation using Google AI Studio Gemini API.
  */
 class UploadView {
   constructor() {
@@ -225,6 +226,159 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
       window.app.router.navigate('quiz');
     } catch (e) {
       window.app.showToast(e.message, 'error');
+    }
+  }
+
+  /* ===================================================================
+     AI STUDIO GEMINI GENERATOR & API KEY MODAL CONTROLLERS
+     =================================================================== */
+
+  openAiConfigModal() {
+    const modal = document.getElementById('ai-config-modal');
+    const input = document.getElementById('ai-api-key-input');
+    const badge = document.getElementById('ai-key-status-badge');
+
+    if (input) {
+      input.value = window.aiService.getApiKey();
+    }
+    if (badge) {
+      badge.style.display = 'none';
+    }
+    if (modal) {
+      modal.classList.add('active');
+    }
+  }
+
+  closeAiConfigModal() {
+    const modal = document.getElementById('ai-config-modal');
+    if (modal) {
+      modal.classList.remove('active');
+    }
+  }
+
+  toggleApiKeyVisibility() {
+    const input = document.getElementById('ai-api-key-input');
+    const btn = document.getElementById('btn-toggle-ai-key-visibility');
+    if (!input) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      if (btn) btn.textContent = '🔒';
+    } else {
+      input.type = 'password';
+      if (btn) btn.textContent = '👁️';
+    }
+  }
+
+  async testAiApiKey() {
+    const input = document.getElementById('ai-api-key-input');
+    const badge = document.getElementById('ai-key-status-badge');
+    const key = input ? input.value.trim() : '';
+
+    if (!key) {
+      window.app.showToast('Vui lòng nhập API Key để kiểm tra!', 'error');
+      return;
+    }
+
+    if (badge) {
+      badge.style.display = 'inline-block';
+      badge.className = 'badge';
+      badge.style.background = 'rgba(59, 130, 246, 0.2)';
+      badge.style.color = '#60a5fa';
+      badge.style.border = '1px solid #60a5fa';
+      badge.textContent = '⏳ Đang kiểm tra API Key...';
+    }
+
+    const res = await window.aiService.validateApiKey(key);
+
+    if (badge) {
+      if (res.valid) {
+        badge.className = 'badge badge-pass';
+        badge.textContent = '✔ API Key Hợp Lệ!';
+        window.app.showToast('API Key Google AI Studio hợp lệ và hoạt động tốt!', 'success');
+      } else {
+        badge.className = 'badge badge-fail';
+        badge.textContent = '✖ API Key Không Hợp Lệ!';
+        window.app.showToast(res.error || 'API Key không hợp lệ!', 'error');
+      }
+    }
+  }
+
+  saveAiApiKey(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('ai-api-key-input');
+    const key = input ? input.value.trim() : '';
+
+    if (!key) {
+      window.app.showToast('Vui lòng nhập API Key trước khi lưu!', 'error');
+      return;
+    }
+
+    window.aiService.saveApiKey(key);
+    this.closeAiConfigModal();
+    window.app.showToast('Đã lưu cấu hình API Key Google AI Studio thành công!', 'success');
+  }
+
+  async generateAiQuiz() {
+    const apiKey = window.aiService.getApiKey();
+    if (!apiKey) {
+      window.app.showToast('Chưa cấu hình API Key Google AI Studio! Vui lòng nhập chìa khóa API trước.', 'info');
+      this.openAiConfigModal();
+      return;
+    }
+
+    const topicInput = document.getElementById('ai-topic-input');
+    const countSelect = document.getElementById('ai-count-select');
+    const difficultySelect = document.getElementById('ai-difficulty-select');
+    const langSelect = document.getElementById('ai-lang-select');
+    const btn = document.getElementById('btn-generate-ai-quiz');
+
+    const topic = topicInput ? topicInput.value.trim() : '';
+    const count = countSelect ? parseInt(countSelect.value, 10) : 10;
+    const difficulty = difficultySelect ? difficultySelect.value : 'Trung Bình';
+    const language = langSelect ? langSelect.value : 'Tiếng Việt';
+
+    if (!topic) {
+      window.app.showToast('Vui lòng nhập chủ đề đề thi bạn muốn tạo!', 'error');
+      if (topicInput) topicInput.focus();
+      return;
+    }
+
+    const originalBtnText = btn ? btn.innerHTML : '✨ Tạo Đề Thi Bằng AI Studio';
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `⏳ Đang Gọi AI Studio Biên Soạn (${count} câu)...`;
+    }
+
+    window.app.showToast(`Đang kết nối Google AI Studio tạo đề thi "${topic}"...`, 'info');
+
+    try {
+      const generatedTxt = await window.aiService.generateQuizContent({
+        apiKey,
+        topic,
+        count,
+        difficulty,
+        language
+      });
+
+      const textArea = document.getElementById('raw-txt-input');
+      const titleInput = document.getElementById('quiz-title-input');
+
+      if (textArea) textArea.value = generatedTxt;
+      if (titleInput) titleInput.value = `[AI Studio] Đề Thi: ${topic}`;
+
+      this.handleLiveValidation();
+
+      window.app.showToast(`✨ Đã khởi tạo thành công đề thi AI Studio: "${topic}" (${count} câu)!`, 'success');
+    } catch (err) {
+      console.error('Error generating AI quiz:', err);
+      window.app.showToast(err.message || 'Lỗi khi gọi Google AI Studio!', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnText;
+      }
     }
   }
 }

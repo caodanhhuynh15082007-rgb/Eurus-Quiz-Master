@@ -81,12 +81,12 @@ services:
 # 📝 3. WORK CHECKPOINT MATRIX
 
 ## Task 1: Core AI Service Component
-- [ ] `[NEW]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Google Gemini REST API client with API Key validation, model endpoint fallback (`gemini-1.5-flash` / `gemini-2.0-flash`), prompt builder, Markdown code fence stripper, and 30s AbortController guard.
+- [x] `[NEW]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Google Gemini REST API client with API Key validation, model endpoint fallback (`gemini-1.5-flash` / `gemini-2.0-flash`), prompt builder, Markdown code fence stripper, and 30s AbortController guard.
 
 ## Task 2: UI Layout & Styling Enhancements
-- [ ] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add `#ai-config-modal` overlay with password input `#ai-api-key-input`, toggle visibility button, API test ping button, and AI Generator Card `#ai-generator-card` on the Upload page.
-- [ ] `[MODIFY]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Add styles for AI Generator Card, glowing gradient border `.ai-generator-card`, glowing action button `.btn-ai-glow`, and status badges.
+- [x] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add `#ai-config-modal` overlay with password input `#ai-api-key-input`, toggle visibility button, API test ping button, and AI Generator Card `#ai-generator-card` on the Upload page.
+- [x] `[MODIFY]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Add styles for AI Generator Card, glowing gradient border `.ai-generator-card`, glowing action button `.btn-ai-glow`, and status badges.
 
 ## Task 3: Dynamic Views & Router Integration
-- [ ] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Bind AI Config modal listeners, API Key test ping controller, AI Quiz generation click handler with live spinner status, and auto-hydration into TXT editor.
-- [ ] `[MODIFY]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Register `window.aiService` into SPA application registry.
+- [x] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Bind AI Config modal listeners, API Key test ping controller, AI Quiz generation click handler with live spinner status, and auto-hydration into TXT editor.
+- [x] `[MODIFY]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Register `window.aiService` into SPA application registry.

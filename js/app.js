@@ -9,7 +9,8 @@ class App {
       quizEngine: window.quizEngineService,
       history: window.historyService,
       saved: window.savedService,
-      feedback: window.feedbackService
+      feedback: window.feedbackService,
+      ai: window.aiService
     };
 
     this.views = {
