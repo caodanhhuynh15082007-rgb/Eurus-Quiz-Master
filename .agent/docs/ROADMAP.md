@@ -1,18 +1,19 @@
 # 🗺️ PROJECT ROADMAP & PHASE TRACKER
 
-> **Status:** Phase 2 (v3.2 Release - Universal Google AI Studio API Key Acceptance) 100% Shipped | **Active Phase:** Ready for Phase 3
+> **Status:** Phase 2 (v3.3 Release - Dynamic Model Discovery & Deprecated Endpoint Purge) 100% Shipped | **Active Phase:** Ready for Phase 3
 
 ---
 
-## 🎯 Completed Phase: Phase 2 — AI Quiz Generator via Google AI Studio API Key (v3.2 Master Release)
-- [x] Phase 2.1: Feature Specification Contract ([SPEC-2.0_ai_quiz_generator.md](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)) — **(SHIPPED - Checksum: fadd588e8e32af8b1ed604c77d339021008da2612499a3ab5bc0b8bd06c9f449)**
+## 🎯 Completed Phase: Phase 2 — AI Quiz Generator via Google AI Studio API Key (v3.3 Master Release)
+- [x] Phase 2.1: Feature Specification Contract ([SPEC-2.0_ai_quiz_generator.md](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)) — **(SHIPPED - Checksum: b39bb341d32f6e2267eb984a5f5390c8258e29ea9971ecb1d6fbac7159d6e220)**
 - [x] Phase 2.2: Adversarial Audit (`/challenge`)
 - [x] Phase 2.3: Architecture & Task Plan (`/plan`)
 - [x] Phase 2.4: Core Build & Implementation (`/build` - `aiService.js`, `index.html`, `styles.css`, `uploadView.js`, `app.js`) — **(SHIPPED - Commit: 2198c50)**
 - [x] Phase 2.5: Custom AI Duration Controls inside AI Generator Card with Bi-directional Sync — **(SHIPPED - Commit: cb4f20b)**
 - [x] Phase 2.6: Universal Google AI Studio API Key Acceptance, Dynamic Model Discovery & Sanitizer — **(SHIPPED - Commit: 4aec428)**
-- [x] Phase 2.7: System Testing & Review (`/test`, `/code-reviewer` & `/review`)
-- [x] Phase 2.8: Production Release (`/ship`)
+- [x] Phase 2.7: Dynamic Model Discovery in Generator & Purging Deprecated Models — **(SHIPPED - Commit: 7988a2a)**
+- [x] Phase 2.8: System Testing & Review (`/test`, `/code-reviewer` & `/review`)
+- [x] Phase 2.9: Production Release (`/ship`)
 
 ---
 
