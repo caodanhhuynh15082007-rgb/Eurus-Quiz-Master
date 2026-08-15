@@ -1,10 +1,10 @@
 ---
-status: SPEC_PLANNED
+status: SPEC_CHALLENGED_AND_LOCKED
 active_phase: "Phase 2: AI Quiz Generator via Google AI Studio API Key"
 active_feature: "SPEC-2.0: Universal Google AI Studio API Key Acceptance & Model Discovery"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "5151f18"
-last_test_status: "PASS (Universal Key Plan Locked)"
+last_commit: "ce61060"
+last_test_status: "PASS (Universal Key Spec Audited & Locked)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** Universal API Key Acceptance Planned (`5151f18`)
+> **Last Checkpoint:** 2026-08-15 | **Status:** Universal API Key Acceptance Audited & Locked (`ce61060`)
 
 ---
 
@@ -38,10 +38,11 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Universal API Key Acceptance Plan (`/plan`)
+### Session 2026-08-15 — Universal API Key Acceptance Audited (`/challenge`)
 - **Spec File:** [`SPEC-2.0_ai_quiz_generator.md`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)
-- **Status:** SPEC_PLANNED.
-- **Task Tree Matrix:**
-  - **Task 1: Universal AI Service Upgrade**: Dynamic model discovery via `GET /v1beta/models`, sanitize API key input, multi-tier fallback list (12+ models), Vietnamese error translator.
-  - **Task 2: UI & Feedback Enhancements**: Input paste sanitization, active model detection badge in UI modal.
+- **Status:** SPEC_CHALLENGED_AND_LOCKED.
+- **Audited Enhancements:**
+  1. Input Sanitization: Auto-trims invisible whitespace/newlines/quotes on paste.
+  2. Dynamic Model Discovery: Probes `GET /v1beta/models?key=KEY` to discover all models authorized for that key.
+  3. Multi-Tier Fallback: 10+ candidate Gemini models.
 - **Next Step:** Run `/build` to execute code implementation.

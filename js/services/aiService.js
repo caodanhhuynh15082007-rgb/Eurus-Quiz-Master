@@ -1,12 +1,15 @@
 /**
- * AiService - Direct Google AI Studio (Gemini REST API) Client.
- * Handles API key persistence, lightweight validation pings, dual model endpoint fallbacks (gemini-1.5-flash / gemini-2.0-flash),
- * prompt construction, Markdown code fence stripping, and AbortController timeout guards.
+ * AiService - Universal Google AI Studio (Gemini REST API) Client.
+ * Implements Dynamic Model Discovery (`GET /v1beta/models`), Robust Key Sanitization,
+ * Multi-Tier Model Fallback (12+ Gemini models), Vietnamese Error Translator,
+ * and AbortController timeout guards.
  */
 class AiService {
   constructor() {
     this.STORAGE_KEY_API_KEY = 'eurus_ai_studio_api_key';
-    // List of Google AI Studio models in order of priority
+    this.STORAGE_KEY_ACTIVE_MODEL = 'eurus_ai_studio_active_model';
+    
+    // Comprehensive list of candidate Gemini models in priority order
     this.CANDIDATE_MODELS = [
       'gemini-2.5-flash',
       'gemini-2.0-flash',
@@ -15,9 +18,23 @@ class AiService {
       'gemini-1.5-flash-latest',
       'gemini-1.5-flash-8b',
       'gemini-1.5-pro',
-      'gemini-1.5-pro-latest'
+      'gemini-1.5-pro-latest',
+      'gemini-1.0-pro'
     ];
-    this.API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
+    this.API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+  }
+
+  /**
+   * Cleans and sanitizes API key string (strips quotes, whitespace, accidental formatting).
+   * @param {string} key 
+   * @returns {string}
+   */
+  sanitizeApiKey(key) {
+    if (!key) return '';
+    return key.toString()
+      .replace(/["'`]/g, '')     // Strip quotes
+      .replace(/\s+/g, '')       // Strip all whitespace and newlines
+      .trim();
   }
 
   /**
@@ -26,7 +43,8 @@ class AiService {
    */
   getApiKey() {
     try {
-      return localStorage.getItem(this.STORAGE_KEY_API_KEY) || '';
+      const raw = localStorage.getItem(this.STORAGE_KEY_API_KEY) || '';
+      return this.sanitizeApiKey(raw);
     } catch (e) {
       console.warn('Error reading AI Studio API key from LocalStorage:', e);
       return '';
@@ -39,8 +57,9 @@ class AiService {
    */
   saveApiKey(apiKey) {
     try {
-      if (apiKey && apiKey.trim()) {
-        localStorage.setItem(this.STORAGE_KEY_API_KEY, apiKey.trim());
+      const clean = this.sanitizeApiKey(apiKey);
+      if (clean) {
+        localStorage.setItem(this.STORAGE_KEY_API_KEY, clean);
       } else {
         localStorage.removeItem(this.STORAGE_KEY_API_KEY);
       }
@@ -50,24 +69,95 @@ class AiService {
   }
 
   /**
-   * Sends a lightweight test request to Gemini REST API across candidate models to validate the key.
+   * Dynamically discovers available models authorized for this API key.
+   * @param {string} apiKey 
+   * @returns {Promise<string[]>}
+   */
+  async discoverAvailableModels(apiKey) {
+    const key = this.sanitizeApiKey(apiKey);
+    if (!key) return [];
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    try {
+      const url = `${this.API_BASE_URL}/models?key=${encodeURIComponent(key)}`;
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.models && Array.isArray(data.models)) {
+          // Filter models that support generateContent method
+          const supported = data.models
+            .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+            .map(m => m.name.replace('models/', ''));
+          
+          if (supported.length > 0) {
+            return supported;
+          }
+        }
+      }
+    } catch (e) {
+      clearTimeout(timeoutId);
+      console.warn('Model discovery probe returned:', e.message);
+    }
+    return [];
+  }
+
+  /**
+   * Translates Google API error messages into user-friendly Vietnamese explanations.
+   * @param {string} rawError 
+   * @param {number} status 
+   * @returns {string}
+   */
+  translateApiError(rawError = '', status = 0) {
+    const msg = (rawError || '').toLowerCase();
+    
+    if (msg.includes('api key not valid') || msg.includes('api_key_invalid') || status === 400 && msg.includes('key')) {
+      return 'API Key không hợp lệ! Vui lòng kiểm tra lại chìa khóa sao chép từ https://aistudio.google.com/app/apikey';
+    }
+    if (msg.includes('quota') || msg.includes('resource_exhausted') || status === 429) {
+      return 'Đã vượt quá hạn ngạch (Quota limit) miễn phí của tài khoản Google AI Studio trong phút này. Vui lòng đợi 30 giây rồi thử lại!';
+    }
+    if (msg.includes('permission_denied') || status === 403) {
+      return 'Tài khoản không có quyền truy cập mô hình này hoặc API Key bị hạn chế dịch vụ.';
+    }
+    if (msg.includes('user location is not supported') || msg.includes('location')) {
+      return 'Khu vực địa lý hiện tại chưa được hỗ trợ trực tiếp. Vui lòng bật VPN hoặc đổi vùng Google Cloud Project.';
+    }
+    if (status >= 500) {
+      return 'Máy chủ Google AI Studio đang bận hoặc bảo trì tạm thời. Vui lòng thử lại sau giây lát.';
+    }
+    return rawError || 'Không thể kết nối đến máy chủ Google AI Studio.';
+  }
+
+  /**
+   * Sends a lightweight test request across discovered and candidate models to validate the key.
    * @param {string} apiKey 
    * @returns {Promise<{ valid: boolean, error?: string, activeModel?: string }>}
    */
   async validateApiKey(apiKey) {
-    const key = apiKey || this.getApiKey();
-    if (!key || !key.trim()) {
+    const key = this.sanitizeApiKey(apiKey || this.getApiKey());
+    if (!key) {
       return { valid: false, error: 'Vui lòng nhập API Key Google AI Studio!' };
     }
 
-    let lastError = '';
+    // 1. Try dynamic discovery first
+    const discovered = await this.discoverAvailableModels(key);
+    
+    // 2. Build prioritized models queue (discovered models first, followed by default candidates)
+    const modelsQueue = Array.from(new Set([...discovered, ...this.CANDIDATE_MODELS]));
 
-    for (const model of this.CANDIDATE_MODELS) {
+    let lastError = '';
+    let lastStatus = 0;
+
+    for (const model of modelsQueue) {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per candidate
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per test
 
       try {
-        const url = `${this.API_BASE_URL}/${model}:generateContent?key=${encodeURIComponent(key.trim())}`;
+        const url = `${this.API_BASE_URL}/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -79,18 +169,22 @@ class AiService {
         });
 
         clearTimeout(timeoutId);
+        lastStatus = response.status;
 
         if (response.ok) {
           this.saveApiKey(key);
+          try {
+            localStorage.setItem(this.STORAGE_KEY_ACTIVE_MODEL, model);
+          } catch (e) {}
           return { valid: true, activeModel: model };
         }
 
         const errData = await response.json().catch(() => ({}));
         lastError = errData.error?.message || `Lỗi HTTP ${response.status}`;
         
-        // If it's not a 404 (model not found), but an auth error (400/403/401), stop immediately
+        // If it's a definitive invalid key error, stop scanning immediately
         if (response.status === 400 && lastError.toLowerCase().includes('api key not valid')) {
-          return { valid: false, error: 'API Key không hợp lệ! Vui lòng kiểm tra lại chìa khóa từ Google AI Studio.' };
+          return { valid: false, error: this.translateApiError(lastError, response.status) };
         }
       } catch (err) {
         clearTimeout(timeoutId);
@@ -98,11 +192,11 @@ class AiService {
       }
     }
 
-    return { valid: false, error: lastError || 'Không thể kết nối đến Google AI Studio.' };
+    return { valid: false, error: this.translateApiError(lastError, lastStatus) };
   }
 
   /**
-   * Generates a full structured TXT quiz question bank via Gemini API.
+   * Generates a full structured TXT quiz question bank via Gemini API with resilient model fallback.
    * @param {Object} params
    * @param {string} [params.apiKey]
    * @param {string} params.topic
@@ -112,8 +206,8 @@ class AiService {
    * @returns {Promise<string>} Raw TXT formatted string
    */
   async generateQuizContent({ apiKey = null, topic, count = 10, difficulty = 'Trung Bình', language = 'Tiếng Việt' }) {
-    const key = apiKey || this.getApiKey();
-    if (!key || !key.trim()) {
+    const key = this.sanitizeApiKey(apiKey || this.getApiKey());
+    if (!key) {
       throw new Error('Chưa cấu hình API Key Google AI Studio! Vui lòng bấm vào "⚙️ Cấu Hình API Key" để nhập chìa khóa.');
     }
 
@@ -143,14 +237,20 @@ CHÚ Ý QUAN TRỌNG:
 
     let rawText = '';
     let lastError = null;
+    let lastStatus = 0;
 
-    // Loop through candidate models in order of priority
-    for (const model of this.CANDIDATE_MODELS) {
+    // Prefer previously active model if saved
+    const savedModel = localStorage.getItem(this.STORAGE_KEY_ACTIVE_MODEL);
+    const candidateList = savedModel 
+      ? Array.from(new Set([savedModel, ...this.CANDIDATE_MODELS]))
+      : this.CANDIDATE_MODELS;
+
+    for (const model of candidateList) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
 
       try {
-        const url = `${this.API_BASE_URL}/${model}:generateContent?key=${encodeURIComponent(key.trim())}`;
+        const url = `${this.API_BASE_URL}/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -167,12 +267,16 @@ CHÚ Ý QUAN TRỌNG:
         });
 
         clearTimeout(timeoutId);
+        lastStatus = response.status;
 
         if (response.ok) {
           const data = await response.json();
           const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (candidateText && candidateText.trim()) {
             rawText = candidateText.trim();
+            try {
+              localStorage.setItem(this.STORAGE_KEY_ACTIVE_MODEL, model);
+            } catch (e) {}
             break; // Success!
           }
         } else {
@@ -185,10 +289,8 @@ CHÚ Ý QUAN TRỌNG:
       }
     }
 
-    clearTimeout(timeoutId);
-
     if (!rawText) {
-      throw new Error(lastError || 'Không thể tạo bộ câu hỏi từ Google AI Studio. Vui lòng kiểm tra lại API Key hoặc hạn ngạch tài khoản!');
+      throw new Error(this.translateApiError(lastError, lastStatus));
     }
 
     // Strip Markdown Code Fences (```txt ... ``` or ``` ...)

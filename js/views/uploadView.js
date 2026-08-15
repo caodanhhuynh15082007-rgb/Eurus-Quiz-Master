@@ -315,7 +315,9 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
   async testAiApiKey() {
     const input = document.getElementById('ai-api-key-input');
     const badge = document.getElementById('ai-key-status-badge');
-    const key = input ? input.value.trim() : '';
+    const key = input ? window.aiService.sanitizeApiKey(input.value) : '';
+
+    if (input) input.value = key; // Update cleaned key into UI
 
     if (!key) {
       window.app.showToast('Vui lòng nhập API Key để kiểm tra!', 'error');
@@ -328,7 +330,7 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
       badge.style.background = 'rgba(59, 130, 246, 0.2)';
       badge.style.color = '#60a5fa';
       badge.style.border = '1px solid #60a5fa';
-      badge.textContent = '⏳ Đang kiểm tra API Key...';
+      badge.textContent = '⏳ Đang quét mô hình Google AI Studio...';
     }
 
     const res = await window.aiService.validateApiKey(key);
@@ -336,11 +338,11 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
     if (badge) {
       if (res.valid) {
         badge.className = 'badge badge-pass';
-        badge.textContent = '✔ API Key Hợp Lệ!';
-        window.app.showToast('API Key Google AI Studio hợp lệ và hoạt động tốt!', 'success');
+        badge.textContent = `✔ API Key Hợp Lệ! (${res.activeModel || 'Gemini Flash'})`;
+        window.app.showToast(`API Key hợp lệ! Đã kết nối thành công mô hình ${res.activeModel || 'Gemini Flash'}!`, 'success');
       } else {
         badge.className = 'badge badge-fail';
-        badge.textContent = '✖ API Key Không Hợp Lệ!';
+        badge.textContent = '✖ API Key Chưa Hợp Lệ!';
         window.app.showToast(res.error || 'API Key không hợp lệ!', 'error');
       }
     }
@@ -349,7 +351,7 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
   saveAiApiKey(e) {
     if (e) e.preventDefault();
     const input = document.getElementById('ai-api-key-input');
-    const key = input ? input.value.trim() : '';
+    const key = input ? window.aiService.sanitizeApiKey(input.value) : '';
 
     if (!key) {
       window.app.showToast('Vui lòng nhập API Key trước khi lưu!', 'error');
@@ -357,6 +359,7 @@ Explanation: ASAP is a universally recognized abbreviation for "As Soon As Possi
     }
 
     window.aiService.saveApiKey(key);
+    if (input) input.value = key;
     this.closeAiConfigModal();
     window.app.showToast('Đã lưu cấu hình API Key Google AI Studio thành công!', 'success');
   }

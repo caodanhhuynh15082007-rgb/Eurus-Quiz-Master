@@ -73,8 +73,8 @@ services:
 # 📝 3. WORK CHECKPOINT MATRIX
 
 ## Task 1: Universal AI Service Upgrade
-- [ ] `[MODIFY]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Implement `sanitizeApiKey()`, Dynamic Model Discovery via `GET /models`, Expanded 10+ Model Fallback Matrix, and Vietnamese error translator.
+- [x] `[MODIFY]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Implement `sanitizeApiKey()`, Dynamic Model Discovery via `GET /models`, Expanded 10+ Model Fallback Matrix, and Vietnamese error translator.
 
 ## Task 2: UI & Feedback Enhancements
-- [ ] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Auto-trim input field on paste, display detected active model name in badge on success.
-- [ ] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Enhance API Key configuration instructions and status badge.
+- [x] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Auto-trim input field on paste, display detected active model name in badge on success.
+- [x] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Enhance API Key configuration instructions and status badge.
