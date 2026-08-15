@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-15 — Eurus Quiz Master v3.0 Release (`SPEC-2.0_ai_quiz_generator.md`)
+- **Milestone:** Eurus Quiz Master v3.0 Shipped (AI Quiz Generator via Google AI Studio API Key).
+- **Features Implemented:**
+  1. **Google AI Studio API Key Configuration Modal** (`aiService.js`, `index.html`, `uploadView.js`): Obfuscated API Key input (`type="password"`), LocalStorage persistence, and validation ping test button (`🧪 Kiểm Tra API Key`).
+  2. **AI Quiz Generator Control Panel** (`index.html`, `styles.css`, `uploadView.js`): Form inputs for Topic, Question Count (5-20), Difficulty (Dễ/Trung Bình/Khó), Language (Tiếng Việt/English), and glowing button `✨ Tạo Đề Thi Bằng AI Studio`.
+  3. **Direct Gemini REST API Integration** (`aiService.js`): Dual model fallback (`gemini-1.5-flash` / `gemini-2.0-flash`), Markdown code fence stripper, and 30s `AbortController` timeout guard.
+- **Verification & Checksum:** 100% Pass (`17/17` files verified). SHA256: `3949AED3B4A580E4EF958963B4D78F26DDE1A88F5ECAF0C6D17418DA15DB4F79`.
+
+---
+
 ### 2026-08-14 — Eurus Quiz Master v2.5 Release (`SPEC-1.0_quiz_system.md`)
 - **Milestone:** Eurus Quiz Master v2.5 Shipped (Universal Emerald Green Glassmorphic Explanation Cards & Auto Fallback Generator).
 - **Features Implemented:**
