@@ -1,0 +1,2 @@
+[plan](slashCommand;plan) @EurusQuizBot bạn đã tạo chưa thực sự tồn tại , dẫn tới việc tôi không thể tìm thấy con bot đó ở trên phần tìm kiếm trên Telegram, tôi muốn tạo một con bot @EurusQuizBot bằng tài khoản Telegram của mình (tên: Danh Huynh, số điện thoại: 0898900008) và tích hợp nó thành con bot chính để gửi mã cho học viên thì phải làm gì? 
+(đây chỉ mới là plan thôi chứ chưa có phải build gì cả nhé)

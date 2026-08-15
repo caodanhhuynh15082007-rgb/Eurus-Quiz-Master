@@ -194,13 +194,34 @@ class QuizView {
     }
   }
 
-  submitQuiz() {
+  async submitQuiz() {
     try {
       const attemptResult = window.quizEngineService.evaluateGrade();
       const currentUser = window.authService.getCurrentUser();
       
-      // Save history log
+      // 1. Save local history log
       window.historyService.saveAttempt(attemptResult, currentUser);
+
+      // 2. Cloud Sync to Supabase Database (quiz_attempts)
+      if (window.supabaseService) {
+        window.supabaseService.insertRecord('quiz_attempts', {
+          user_id: currentUser ? currentUser.id : 'guest',
+          username: currentUser ? (currentUser.fullname || currentUser.username) : 'Khách',
+          quiz_title: attemptResult.quizTitle,
+          total_questions: attemptResult.totalQuestions,
+          correct_count: attemptResult.correctCount,
+          wrong_count: attemptResult.wrongCount,
+          skipped_count: attemptResult.skippedCount,
+          score_percentage: attemptResult.scorePercentage,
+          time_spent_seconds: attemptResult.timeSpentSeconds,
+          is_official: !!(currentUser && currentUser.isOfficial),
+          details: attemptResult.details
+        }).then(res => {
+          if (res && res.success) {
+            window.app.showToast('☁️ Đã đồng bộ kết quả bài thi lên đám mây Supabase!', 'success');
+          }
+        });
+      }
 
       window.app.showToast('Đã nộp bài thành công! Đang chuyển đến bảng kết quả...', 'success');
       
