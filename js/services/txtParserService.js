@@ -82,8 +82,8 @@ class TxtParserService {
         continue;
       }
 
-      // 3. Detect Combined Answer + Explanation on same line (e.g. "Đáp án: A - Lời giải: HTML là...")
-      const ansWithExpMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])[\.\,\-\s]+(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
+      // 3. Detect Combined Answer + Explanation on same line (e.g. "Đáp án: A - Lời giải: HTML là..." or "Answer: A - Solution: ...")
+      const ansWithExpMatch = line.match(/^(?:Đáp\s*án|Answer|Key|Ans|ĐÁP\s*ÁN)[\:\s]+([A-F])[\.\,\-\s]+(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|Explain|Solution|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
       if (ansWithExpMatch) {
         const letter = ansWithExpMatch[1].toUpperCase();
         currentQuestion.correctAnswerIndex = letter.charCodeAt(0) - 65;
@@ -91,8 +91,8 @@ class TxtParserService {
         continue;
       }
 
-      // 4. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "ĐÁP ÁN: A")
-      const ansMatch = line.match(/^(?:Đáp\s*án|Answer|Key|ĐÁP\s*ÁN)[\:\s]+([A-F])/i);
+      // 4. Detect Answer Key (e.g., "Đáp án: A", "ANSWER: B", "Key: C", "Ans: D", "ĐÁP ÁN: A")
+      const ansMatch = line.match(/^(?:Đáp\s*án|Answer|Key|Ans|ĐÁP\s*ÁN)[\:\s]+([A-F])/i);
       if (ansMatch) {
         const letter = ansMatch[1].toUpperCase();
         const charCodeOffset = letter.charCodeAt(0) - 65; // A -> 0, B -> 1, C -> 2, D -> 3, E -> 4, F -> 5
@@ -100,12 +100,12 @@ class TxtParserService {
         continue;
       }
 
-      // 5. Detect Explanation (e.g., "Lời giải: ...", "Giải thích: ...", "[Lời giải] ...", "(Lời giải) ...")
-      const expMatch = line.match(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
+      // 5. Detect Explanation (e.g., "Lời giải: ...", "Explain: ...", "Solution: ...", "Explanation: ...", "Giải thích: ...", "[Solution] ...")
+      const expMatch = line.match(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|Explain|Solution|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+(.*)/i);
       if (expMatch) {
         let expText = expMatch[1].trim();
         // Remove duplicate prefix if present
-        expText = expText.replace(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+/i, '').trim();
+        expText = expText.replace(/^(?:\[?Lời\s*giải\]?|\[?Giải\s*thích\]?|Explanation|Explain|Solution|LÝ\s*DO|Lý\s*do|Ghi\s*chú|Note|Reason)[\:\-\=\s]+/i, '').trim();
         currentQuestion.explanation = expText;
         continue;
       }
@@ -114,7 +114,7 @@ class TxtParserService {
       if (currentQuestion.explanation && currentQuestion.explanation.length > 0 &&
           !line.match(/^(?:Câu|Question|\d+[\.\:\)])/i) &&
           !line.match(/^(\*?)\s*([A-F])[\.\:\)]/i) &&
-          !line.match(/^(?:Đáp\s*án|Answer|Key)/i)) {
+          !line.match(/^(?:Đáp\s*án|Answer|Key|Ans)/i)) {
         currentQuestion.explanation += ' ' + line;
         continue;
       }
@@ -144,7 +144,7 @@ class TxtParserService {
 
   /**
    * Validate if a question block has sufficient options and a correct answer index.
-   * Auto-populates a natural educational explanation fallback if Lời giải line was omitted.
+   * Auto-populates a natural educational explanation fallback if Lời giải / Solution line was omitted.
    */
   validateQuestion(q) {
     if (!q.questionText || q.questionText.trim().length === 0) {
@@ -154,7 +154,7 @@ class TxtParserService {
       return { valid: false, error: `Câu ${q.number} ("${q.questionText.substring(0, 25)}...") có ít hơn 2 phương án lựa chọn.` };
     }
     if (q.correctAnswerIndex < 0 || q.correctAnswerIndex >= q.options.length) {
-      return { valid: false, error: `Câu ${q.number} chưa ghi rõ đáp án đúng (VD: Đáp án: A).` };
+      return { valid: false, error: `Câu ${q.number} chưa ghi rõ đáp án đúng (VD: Đáp án: A hoặc Answer: A).` };
     }
 
     // Ensure every single question has a valid, educational textual explanation
@@ -162,7 +162,17 @@ class TxtParserService {
       const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
       const letter = optionLetters[q.correctAnswerIndex] || (q.correctAnswerIndex + 1);
       const text = q.options[q.correctAnswerIndex] || '';
-      q.explanation = `Phương án đúng là ${letter}: "${text}". Đây là câu trả lời chính xác được xác thực theo dữ liệu chuẩn của bài thi.`;
+
+      // Detect if question is in English context
+      const isEnglish = /[a-zA-Z]/.test(q.questionText) && 
+        (/^(?:What|Which|How|Why|Where|When|Who|Whom|Whose|Select|Choose|Identify|Find|Fill)\b/i.test(q.questionText.trim()) ||
+         /Question\s*\d+/i.test(q.questionText));
+
+      if (isEnglish) {
+        q.explanation = `The correct answer is ${letter}: "${text}". This is verified as the accurate answer according to standard exam guidelines.`;
+      } else {
+        q.explanation = `Phương án đúng là ${letter}: "${text}". Đây là câu trả lời chính xác được xác thực theo dữ liệu chuẩn của bài thi.`;
+      }
     }
 
     return { valid: true };
@@ -211,6 +221,51 @@ C. const
 D. static
 Đáp án: C
 Lời giải: Theo chuẩn ES6 JavaScript, từ khóa "const" (constant) dùng để khai báo hằng số. Biến khai báo bằng const không thể thay đổi hoặc gán lại giá trị mới sau khi đã khởi tạo.`;
+  }
+
+  /**
+   * Generates a sample formatted TXT text string in English (Preset 2: English Grammar & Business).
+   */
+  getSampleEnglishTxtContent() {
+    return `Question 1: What does the acronym "API" stand for in software engineering?
+A. Application Programming Interface
+B. Automated Process Integration
+C. Advanced Protocol Internet
+D. Artificial Pipeline Intelligence
+Answer: A
+Explain: API stands for "Application Programming Interface", which is a set of rules and protocols allowing different software applications to communicate with each other.
+
+Question 2: Which HTTP method is typically used to update an existing resource completely on the server?
+A. GET
+B. POST
+C. PUT
+D. DELETE
+Answer: C
+Solution: The PUT method is idempotent and is used in RESTful architectures to replace or completely update the target resource with the uploaded payload.
+
+Question 3: Select the correct word to complete the sentence: "The executive board decided to _______ the launch until Q4."
+A. postpone
+B. postponed
+C. postponing
+D. postponement
+Answer: A
+Explanation: After "decided to", the verb must be in its base/infinitive form ("postpone").
+
+Question 4: What is the primary purpose of a "Git commit"?
+A. To download remote repository files
+B. To record a snapshot of staged changes to the local repository history
+C. To delete untracked files
+D. To compile source code into machine binaries
+Answer: B
+Solution: A Git commit creates a cryptographically hashed snapshot of staged file modifications in the project's version control history.
+
+Question 5: Which status code indicates that a requested web resource was not found?
+A. 200 OK
+B. 301 Moved Permanently
+C. 404 Not Found
+D. 500 Internal Server Error
+Answer: C
+Explain: HTTP status code 404 indicates that the server cannot locate the requested resource or URI endpoint.`;
   }
 }
 

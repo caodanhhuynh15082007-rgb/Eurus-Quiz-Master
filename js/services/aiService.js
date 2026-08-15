@@ -216,8 +216,27 @@ class AiService {
     }
 
     const numQuestions = Math.min(Math.max(parseInt(count, 10) || 10, 3), 25);
+    const isEng = language && (language.toLowerCase().includes('english') || language.toLowerCase().includes('anh'));
 
-    const systemPrompt = `Bạn là một Chuyên gia Giáo dục và Biên soạn Đề thi Trắc nghiệm Hàng đầu.
+    const systemPrompt = isEng ?
+`You are an elite Educational Assessment & Multiple-Choice Exam Specialist.
+Your task is to generate a comprehensive, accurate multiple-choice quiz bank of exactly ${numQuestions} questions about "${topic.trim()}" at "${difficulty}" difficulty level in English.
+
+MANDATORY OUTPUT FORMAT RULES (Each question MUST strictly adhere to this format, NEVER omit the explanation line):
+
+Question 1: [Clear, unambiguous question text]
+A. [Option A]
+B. [Option B]
+C. [Option C]
+D. [Option D]
+Answer: [Single capital letter: A, B, C, or D]
+Explanation: [Detailed, rich educational explanation of why the answer is correct and key conceptual insights]
+
+CRITICAL CONSTRAINTS:
+1. Return purely raw TXT content directly without markdown codeblocks (\`\`\` or \`\`\`txt).
+2. Exactly ${numQuestions} questions must be generated.
+3. Every single question MUST include the "Answer:" and "Explanation:" lines.` :
+`Bạn là một Chuyên gia Giáo dục và Biên soạn Đề thi Trắc nghiệm Hàng đầu.
 Nhiệm vụ của bạn là tạo ra một bộ câu hỏi trắc nghiệm hoàn chỉnh gồm chính xác ${numQuestions} câu hỏi về chủ đề "${topic.trim()}" ở mức độ "${difficulty}" bằng ngôn ngữ "${language}".
 
 YÊU CẦU ĐỊNH DẠNG ĐẦU RA BẮT BUỘC (Mỗi câu hỏi phải đúng chuẩn định dạng TXT sau, KHÔNG được bỏ sót dòng Lời giải):

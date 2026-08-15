@@ -139,13 +139,18 @@
               </div>
             </div>
 
-            <!-- Preset Sample Question Button -->
+            <!-- Preset Sample Question Buttons (Bilingual) -->
             <div class="glass-card">
               <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem;">💡 Đề Thi Mẫu Có Sẵn</h3>
-              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Thử nghiệm nhanh hệ thống với bộ câu hỏi kiến thức Lập Trình & CNTT mẫu</p>
-              <button class="btn btn-primary" style="width: 100%;" onclick="app.views.upload.loadSampleQuiz()">
-                ⚡ Nạp Đề Mẫu Công Nghệ Thông Tin (10 Câu)
-              </button>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Thử nghiệm nhanh hệ thống với các bộ đề thi mẫu đa dạng chuẩn định dạng:</p>
+              <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                <button class="btn btn-primary" style="width: 100%; text-align: left; padding: 0.65rem 0.85rem;" onclick="app.views.upload.loadSampleQuiz('it')">
+                  ⚡ 🇻🇳 Đề Mẫu CNTT & Lập Trình (5 Câu Tiếng Việt)
+                </button>
+                <button class="btn btn-secondary" style="width: 100%; text-align: left; padding: 0.65rem 0.85rem; border-color: rgba(96, 165, 250, 0.4); color: #93c5fd;" onclick="app.views.upload.loadSampleQuiz('english')">
+                  ⚡ 🇬🇧 Đề Mẫu Tiếng Anh (English Business & Grammar)
+                </button>
+              </div>
             </div>
 
             <!-- AI Studio Quiz Generator Card -->
@@ -235,16 +240,25 @@
             </div>
 
             <div class="form-group">
-              <textarea id="raw-txt-input" class="form-textarea" placeholder="Dán nội dung câu hỏi trắc nghiệm vào đây...
+              <textarea id="raw-txt-input" class="form-textarea" placeholder="Hỗ trợ cả 2 định dạng chuẩn Tiếng Việt & Tiếng Anh:
 
-Ví dụ định dạng file TXT:
+[1] Định dạng Tiếng Việt:
 Câu 1: HTML là gì?
 A. HyperText Markup Language
 B. High Tech Modern Language
 C. Hyperlink Text System
 D. Home Tool Markup
 Đáp án: A
-Lời giải: HTML là ngôn ngữ đánh dấu siêu văn bản." oninput="app.views.upload.handleLiveValidation()">Câu 1: Ngôn ngữ lập trình nào phổ biến nhất cho phát triển Web Frontend?
+Lời giải: HTML là ngôn ngữ đánh dấu siêu văn bản.
+
+[2] Định dạng Tiếng Anh (English Format):
+Question 1: What is the primary function of CSS?
+A. Database management
+B. Styling and layout of web pages
+C. Server-side logic
+D. Binary compilation
+Answer: B
+Explain: CSS defines visual layout, colors, and styling." oninput="app.views.upload.handleLiveValidation()">Câu 1: Ngôn ngữ lập trình nào phổ biến nhất cho phát triển Web Frontend?
 A. Python
 B. JavaScript
 C. C++
