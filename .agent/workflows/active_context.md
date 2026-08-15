@@ -1,10 +1,10 @@
 ---
-status: SPEC_PLANNED
+status: SPEC_CHALLENGED_AND_LOCKED
 active_phase: "Phase 2: AI Quiz Generator via Google AI Studio API Key"
 active_feature: "SPEC-2.0: AI Quiz Generator with Custom AI Duration Timer Control"
 active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "9c4c5e1"
-last_test_status: "PASS (SPEC-2.0 AI Duration Plan Locked)"
+last_commit: "4d18489"
+last_test_status: "PASS (AI Duration Spec Audited & Locked)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** AI Duration Control Plan Locked (`9c4c5e1`)
+> **Last Checkpoint:** 2026-08-15 | **Status:** AI Duration Spec Audited & Locked (`4d18489`)
 
 ---
 
@@ -38,10 +38,10 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Custom AI Duration Control Plan (`/plan`)
+### Session 2026-08-15 — AI Duration Spec Audited (`/challenge`)
 - **Spec File:** [`SPEC-2.0_ai_quiz_generator.md`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)
-- **Status:** SPEC_PLANNED.
-- **Task Tree Matrix:**
-  - **Task 2 (UI Upgrade)**: `[MODIFY]` [`index.html`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html) — Add `#ai-duration-value` numerical input & `#ai-duration-unit` dropdown directly inside `#ai-generator-card`.
-  - **Task 3 (View Controller Upgrade)**: `[MODIFY]` [`js/views/uploadView.js`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js) — Add bi-directional sync event listeners between AI card duration controls and TXT duration controls.
-- **Next Step:** Run `/build` to execute implementation diffs.
+- **Status:** SPEC_CHALLENGED_AND_LOCKED.
+- **Audit Stress-Tests Resolved:**
+  1. Input Sanitization: Prevents negative numbers/NaN entries in `#ai-duration-value`.
+  2. Bi-directional Sync Guard: Prevents infinite listener loops when syncing between `#ai-duration-value` / `#ai-duration-unit` and `#quiz-duration-value` / `#quiz-duration-unit`.
+- **Next Step:** Run `/build` to execute code diffs.

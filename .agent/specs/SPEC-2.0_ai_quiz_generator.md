@@ -95,9 +95,9 @@ services:
 ## Task 2: UI Layout & Styling Enhancements
 - [x] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add `#ai-config-modal` overlay with password input `#ai-api-key-input`, toggle visibility button, API test ping button, and AI Generator Card `#ai-generator-card` on the Upload page.
 - [x] `[MODIFY]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Add styles for AI Generator Card, glowing gradient border `.ai-generator-card`, glowing action button `.btn-ai-glow`, and status badges.
-- [ ] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add numerical duration input `#ai-duration-value` and unit dropdown `#ai-duration-unit` (Giây / Phút / Giờ) directly inside `#ai-generator-card`.
+- [x] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add numerical duration input `#ai-duration-value` and unit dropdown `#ai-duration-unit` (Giây / Phút / Giờ) directly inside `#ai-generator-card`.
 
 ## Task 3: Dynamic Views & Router Integration
 - [x] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Bind AI Config modal listeners, API Key test ping controller, AI Quiz generation click handler with live spinner status, and auto-hydration into TXT editor.
 - [x] `[MODIFY]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Register `window.aiService` into SPA application registry.
-- [ ] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Add bi-directional sync listeners between `#ai-duration-value` / `#ai-duration-unit` and `#quiz-duration-value` / `#quiz-duration-unit`.
+- [x] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Add bi-directional sync listeners between `#ai-duration-value` / `#ai-duration-unit` and `#quiz-duration-value` / `#quiz-duration-unit`.

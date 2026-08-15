@@ -9,6 +9,48 @@ class UploadView {
 
   init() {
     this.setupDropzone();
+    this.setupDurationSync();
+  }
+
+  setupDurationSync() {
+    const txtVal = document.getElementById('quiz-duration-value');
+    const txtUnit = document.getElementById('quiz-duration-unit');
+    const aiVal = document.getElementById('ai-duration-value');
+    const aiUnit = document.getElementById('ai-duration-unit');
+
+    if (!txtVal || !txtUnit || !aiVal || !aiUnit) return;
+
+    let isSyncing = false;
+
+    // Sync from TXT Card to AI Card
+    const syncFromTxtToAi = () => {
+      if (isSyncing) return;
+      isSyncing = true;
+      let val = parseInt(txtVal.value, 10);
+      if (isNaN(val) || val <= 0) val = 15;
+      aiVal.value = val;
+      aiUnit.value = txtUnit.value;
+      isSyncing = false;
+    };
+
+    // Sync from AI Card to TXT Card
+    const syncFromAiToTxt = () => {
+      if (isSyncing) return;
+      isSyncing = true;
+      let val = parseInt(aiVal.value, 10);
+      if (isNaN(val) || val <= 0) val = 15;
+      txtVal.value = val;
+      txtUnit.value = aiUnit.value;
+      isSyncing = false;
+    };
+
+    txtVal.addEventListener('input', syncFromTxtToAi);
+    txtVal.addEventListener('change', syncFromTxtToAi);
+    txtUnit.addEventListener('change', syncFromTxtToAi);
+
+    aiVal.addEventListener('input', syncFromAiToTxt);
+    aiVal.addEventListener('change', syncFromAiToTxt);
+    aiUnit.addEventListener('change', syncFromAiToTxt);
   }
 
   setupDropzone() {

@@ -190,6 +190,19 @@
                 </div>
               </div>
 
+              <!-- AI Custom Quiz Duration Controls -->
+              <div class="form-group" style="margin-bottom: 1.15rem;">
+                <label class="form-label" style="font-size: 0.85rem;">⏱️ Thời gian làm bài thi (Tùy chỉnh)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="number" id="ai-duration-value" class="form-input" min="1" max="999" value="15" placeholder="Nhập số..." style="flex: 1; text-align: center; font-weight: 700;">
+                  <select id="ai-duration-unit" class="form-select" style="flex: 1;">
+                    <option value="seconds">Giây</option>
+                    <option value="minutes" selected>Phút</option>
+                    <option value="hours">Giờ</option>
+                  </select>
+                </div>
+              </div>
+
               <button id="btn-generate-ai-quiz" class="btn btn-ai-glow" style="width: 100%; padding: 0.75rem;" onclick="app.views.upload.generateAiQuiz()">
                 ✨ Tạo Đề Thi Bằng AI Studio
               </button>
