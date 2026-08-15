@@ -1,16 +1,16 @@
 # 🗺️ PROJECT ROADMAP & PHASE TRACKER
 
-> **Status:** Phase 1 (v2.5) Shipped | **Active Phase:** Phase 2 (AI Quiz Generator using Google AI Studio API Keys)
+> **Status:** Phase 2 (v3.0 Release - AI Quiz Generator) 100% Shipped | **Active Phase:** Ready for Phase 3
 
 ---
 
-## 🎯 Active Phase: Phase 2 — AI Quiz Generator via Google AI Studio API Keys (`SPEC-2.0`)
-- [ ] Phase 2.1: Feature Specification Contract ([SPEC-2.0_ai_quiz_generator.md](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md))
-- [ ] Phase 2.2: Adversarial Audit (`/challenge`)
-- [ ] Phase 2.3: Architecture & Task Plan (`/plan`)
-- [ ] Phase 2.4: Code Implementation (`/build`)
-- [ ] Phase 2.5: Test Verification & Audit (`/test` & `/review`)
-- [ ] Phase 2.6: Production Release (`/ship`)
+## 🎯 Completed Phase: Phase 2 — AI Quiz Generator via Google AI Studio API Key (v3.0 Release)
+- [x] Phase 2.1: Feature Specification Contract ([SPEC-2.0_ai_quiz_generator.md](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/SPEC-2.0_ai_quiz_generator.md)) — **(SHIPPED - Checksum: 3949aed33b4a580e4ef958963b4d78f26dde1a88f5ecaf0c6d17418da15db4f79)**
+- [x] Phase 2.2: Adversarial Audit (`/challenge`)
+- [x] Phase 2.3: Architecture & Task Plan (`/plan`)
+- [x] Phase 2.4: Core Build & Implementation (`/build` - `aiService.js`, `index.html`, `styles.css`, `uploadView.js`, `app.js`) — **(SHIPPED - Commit: 2198c50)**
+- [x] Phase 2.5: System Testing & Review (`/test` & `/review`)
+- [x] Phase 2.6: Production Release (`/ship`)
 
 ---
 
