@@ -6,6 +6,17 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-15 — Eurus Quiz Master v3.5 Release (Official Account Telegram Bot OTP & Storage Partitioning)
+- **Milestone:** Eurus Quiz Master v3.5 Shipped (Telegram Bot 6-Digit OTP Verification & Guest vs Official Storage Partitioning).
+- **Features Implemented:**
+  1. **Telegram OTP Gateway** (`telegramAuthService.js`): 6-digit random verification code generator with 180s expiry, integrated with Telegram Bot API REST endpoint (`sendMessage`).
+  2. **Storage Partitioning Isolation** (`historyService.js`, `savedService.js`): Guest mode writes exclusively to `sessionStorage` (100% data wiped on page reload/F5), while Official Members write to `localStorage` (permanent persistence).
+  3. **3-Tab Authentication & 6-Digit OTP Modal** (`index.html`, `authView.js`, `styles.css`): New tab "🌟 Tài Khoản Chính Thức", modern glassmorphic 6-digit OTP modal with auto-jump focus, backspace navigation, and live countdown.
+  4. **Official Identity & Profile Sync** (`authService.js`, `profileView.js`): Added phone, telegramUser fields, and emerald green `✔ Học viên chính thức (Telegram Verified)` badge.
+- **Verification & Checksum:** 100% Pass (`18/18` files verified). SHA256: `F05F02E`.
+
+---
+
 ### 2026-08-15 — Eurus Quiz Master v3.4 Release (Bilingual English TXT Format Support)
 - **Milestone:** Eurus Quiz Master v3.4 Shipped (Full English Format Support in TXT Parser & Bilingual AI Prompt Sync).
 - **Features Implemented:**
