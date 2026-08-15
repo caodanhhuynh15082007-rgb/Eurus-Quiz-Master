@@ -6,8 +6,17 @@
 class AiService {
   constructor() {
     this.STORAGE_KEY_API_KEY = 'eurus_ai_studio_api_key';
-    this.DEFAULT_MODEL = 'gemini-1.5-flash';
-    this.FALLBACK_MODEL = 'gemini-2.0-flash';
+    // List of Google AI Studio models in order of priority
+    this.CANDIDATE_MODELS = [
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-2.0-flash-exp',
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-flash-8b',
+      'gemini-1.5-pro',
+      'gemini-1.5-pro-latest'
+    ];
     this.API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
   }
 
@@ -41,9 +50,9 @@ class AiService {
   }
 
   /**
-   * Sends a lightweight test request to Gemini REST API to validate the key.
+   * Sends a lightweight test request to Gemini REST API across candidate models to validate the key.
    * @param {string} apiKey 
-   * @returns {Promise<{ valid: boolean, error?: string }>}
+   * @returns {Promise<{ valid: boolean, error?: string, activeModel?: string }>}
    */
   async validateApiKey(apiKey) {
     const key = apiKey || this.getApiKey();
@@ -51,38 +60,45 @@ class AiService {
       return { valid: false, error: 'Vui lòng nhập API Key Google AI Studio!' };
     }
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout for ping
+    let lastError = '';
 
-    try {
-      const url = `${this.API_BASE_URL}/${this.DEFAULT_MODEL}:generateContent?key=${encodeURIComponent(key.trim())}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: 'Ping' }] }],
-          generationConfig: { maxOutputTokens: 5 }
-        }),
-        signal: controller.signal
-      });
+    for (const model of this.CANDIDATE_MODELS) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per candidate
 
-      clearTimeout(timeoutId);
+      try {
+        const url = `${this.API_BASE_URL}/${model}:generateContent?key=${encodeURIComponent(key.trim())}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'Ping' }] }],
+            generationConfig: { maxOutputTokens: 5 }
+          }),
+          signal: controller.signal
+        });
 
-      if (response.ok) {
-        this.saveApiKey(key);
-        return { valid: true };
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          this.saveApiKey(key);
+          return { valid: true, activeModel: model };
+        }
+
+        const errData = await response.json().catch(() => ({}));
+        lastError = errData.error?.message || `Lỗi HTTP ${response.status}`;
+        
+        // If it's not a 404 (model not found), but an auth error (400/403/401), stop immediately
+        if (response.status === 400 && lastError.toLowerCase().includes('api key not valid')) {
+          return { valid: false, error: 'API Key không hợp lệ! Vui lòng kiểm tra lại chìa khóa từ Google AI Studio.' };
+        }
+      } catch (err) {
+        clearTimeout(timeoutId);
+        lastError = err.message;
       }
-
-      const errData = await response.json().catch(() => ({}));
-      const errMsg = errData.error?.message || `Lỗi HTTP ${response.status}: API Key không hợp lệ hoặc đã hết hạn ngạch.`;
-      return { valid: false, error: errMsg };
-    } catch (err) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
-        return { valid: false, error: 'Quá thời gian kết nối (Timeout 12s). Vui lòng kiểm tra lại đường truyền mạng!' };
-      }
-      return { valid: false, error: err.message || 'Không thể kết nối đến máy chủ Google AI Studio.' };
     }
+
+    return { valid: false, error: lastError || 'Không thể kết nối đến Google AI Studio.' };
   }
 
   /**
@@ -125,16 +141,14 @@ CHÚ Ý QUAN TRỌNG:
 2. Tuyệt đối KHÔNG bao bọc bởi mã code fence Markdown như \`\`\`txt hoặc \`\`\`
 3. Phải tạo đủ đúng ${numQuestions} câu hỏi. Tất cả các câu hỏi ĐỀU BẮT BUỘC có dòng "Lời giải:" giải thích chi tiết lý do.`;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout for AI generation
-
     let rawText = '';
     let lastError = null;
 
-    // Try Primary Model first, then Fallback Model if needed
-    const modelsToTry = [this.DEFAULT_MODEL, this.FALLBACK_MODEL];
+    // Loop through candidate models in order of priority
+    for (const model of this.CANDIDATE_MODELS) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
 
-    for (const model of modelsToTry) {
       try {
         const url = `${this.API_BASE_URL}/${model}:generateContent?key=${encodeURIComponent(key.trim())}`;
         const response = await fetch(url, {
@@ -152,6 +166,8 @@ CHÚ Ý QUAN TRỌNG:
           signal: controller.signal
         });
 
+        clearTimeout(timeoutId);
+
         if (response.ok) {
           const data = await response.json();
           const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -164,11 +180,8 @@ CHÚ Ý QUAN TRỌNG:
           lastError = errData.error?.message || `Lỗi Google AI Studio (${response.status})`;
         }
       } catch (e) {
+        clearTimeout(timeoutId);
         lastError = e.message;
-        if (e.name === 'AbortError') {
-          clearTimeout(timeoutId);
-          throw new Error('Quá thời gian xử lý AI (Timeout 35s). Vui lòng thử lại hoặc giảm số lượng câu hỏi!');
-        }
       }
     }
 
