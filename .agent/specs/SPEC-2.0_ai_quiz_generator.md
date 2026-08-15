@@ -1,6 +1,6 @@
-# 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key
+# 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key & Custom AI Duration Control
 
-> **Status:** SPEC_PLANNED | **Feature:** AI Quiz Generation with Google AI Studio (Gemini Flash API)
+> **Status:** SPEC_PLANNED | **Feature:** AI Quiz Generation with Custom Timer Controls (Gemini Flash API)
 
 ---
 
@@ -9,9 +9,9 @@
 ## 1.1 User Stories
 
 - **As a Student / Educator**, I want to enter and securely save my Google AI Studio API Key in the application settings so that I can generate automated quiz question banks on any custom topic directly within the web app.
-- **As a User**, I want an AI Quiz Generation panel on the main page where I can specify the topic (e.g. "Python Fundamentals", "World War II History", "TOEIC Grammar"), number of questions (5-20), difficulty level, and language.
-- **As a User**, I want the AI to generate a complete quiz in the standard TXT format with 4 options (A-D), correct answer key (`Đáp án: X`), and rich educational explanations (`Lời giải: ...`) for every single question.
-- **As a User**, I want the generated AI quiz to automatically load into the TXT editor and Quiz Taker Engine with one click so I can test my knowledge immediately.
+- **As a User**, I want an AI Quiz Generation panel on the main page where I can specify the topic (e.g. "Python Fundamentals", "World War II History", "TOEIC Grammar"), number of questions (5-20), difficulty level, language, AND custom quiz duration timer controls.
+- **As a User**, I want to freely adjust the quiz duration (number value + unit: Seconds/Minutes/Hours) directly inside the AI Generator Card, exactly identical to the timer controls in the raw TXT file section.
+- **As a User**, I want the AI to generate a complete quiz in standard TXT format with rich educational explanations (`Lời giải: ...`) and start the quiz with my specified duration time.
 
 ---
 
@@ -50,6 +50,14 @@ Then the system catches the exception without freezing the UI
 And displays an actionable, human-readable error toast (e.g., "API Key không hợp lệ hoặc đã vượt quá hạn ngạch (quota) của Google AI Studio!")
 ```
 
+### Scenario 5: Custom Quiz Duration Timer Control Inside AI Generator Card
+```gherkin
+Given a user is inside the AI Studio Quiz Generator Card (`#ai-generator-card`)
+When they adjust the duration number field (`#ai-duration-value`) or unit dropdown (`#ai-duration-unit`: Giây / Phút / Giờ)
+Then the system updates the quiz duration configuration
+And syncs seamlessly with the main TXT timer controls so the quiz session timer reflects the user's exact duration setting
+```
+
 ---
 
 # 📐 2. TECHNICAL ARCHITECTURE & NEGATIVE SPACE
@@ -64,7 +72,7 @@ services:
       - validateApiKey(apiKey): Promise<{ valid: boolean, error?: string }>
       - generateQuizContent({ apiKey, topic, count, difficulty, language }): Promise<string>
   - name: uploadView
-    description: Extended with AI Generator Card, API Key Configurator modal/drawer, and generation status indicator
+    description: Extended with AI Generator Card, API Key Configurator modal, and bi-directional AI duration timer sync
 ```
 
 ---
@@ -86,7 +94,9 @@ services:
 ## Task 2: UI Layout & Styling Enhancements
 - [x] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add `#ai-config-modal` overlay with password input `#ai-api-key-input`, toggle visibility button, API test ping button, and AI Generator Card `#ai-generator-card` on the Upload page.
 - [x] `[MODIFY]` [css/styles.css](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/css/styles.css): Add styles for AI Generator Card, glowing gradient border `.ai-generator-card`, glowing action button `.btn-ai-glow`, and status badges.
+- [ ] `[MODIFY]` [index.html](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/index.html): Add numerical duration input `#ai-duration-value` and unit dropdown `#ai-duration-unit` (Giây / Phút / Giờ) directly inside `#ai-generator-card`.
 
 ## Task 3: Dynamic Views & Router Integration
 - [x] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Bind AI Config modal listeners, API Key test ping controller, AI Quiz generation click handler with live spinner status, and auto-hydration into TXT editor.
 - [x] `[MODIFY]` [js/app.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/app.js): Register `window.aiService` into SPA application registry.
+- [ ] `[MODIFY]` [js/views/uploadView.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/views/uploadView.js): Add bi-directional sync listeners between `#ai-duration-value` / `#ai-duration-unit` and `#quiz-duration-value` / `#quiz-duration-unit`.
