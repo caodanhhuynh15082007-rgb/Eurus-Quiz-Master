@@ -6,6 +6,16 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-15 — Eurus Quiz Master v3.3 Release (`SPEC-2.0_ai_quiz_generator.md`)
+- **Milestone:** Eurus Quiz Master v3.3 Shipped (Dynamic Model Discovery in Generator & Deprecated Model Purge).
+- **Features Implemented:**
+  1. **Purged `gemini-1.0-pro`**: Completely removed sunsetted model endpoint to eliminate 404 errors during AI quiz generation.
+  2. **Dynamic Discovery in Generator** (`aiService.js`): `generateQuizContent()` dynamically calls `discoverAvailableModels()` on-the-fly to query live models authorized on the user's key.
+  3. **Multi-Model Fallback**: Automatically cascades through `gemini-2.0-flash`, `gemini-2.5-flash`, `gemini-1.5-flash-latest`, and `gemini-1.5-pro`.
+- **Verification & Checksum:** 100% Pass (`17/17` files verified). SHA256: `B39BB341D32F6E2267EB984A5F5390C8258E29EA9971ECB1D6FBAC7159D6E220`.
+
+---
+
 ### 2026-08-15 — Eurus Quiz Master v3.2 Release (`SPEC-2.0_ai_quiz_generator.md`)
 - **Milestone:** Eurus Quiz Master v3.2 Shipped (Universal Google AI Studio API Key Acceptance & Model Discovery).
 - **Features Implemented:**
