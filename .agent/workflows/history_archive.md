@@ -6,6 +6,18 @@ This file records all completed session checkpoints, archived feature specs, and
 
 ## 📅 Session Ledger Log
 
+### 2026-08-15 — Eurus Quiz Master v3.4 Release (Bilingual English TXT Format Support)
+- **Milestone:** Eurus Quiz Master v3.4 Shipped (Full English Format Support in TXT Parser & Bilingual AI Prompt Sync).
+- **Features Implemented:**
+  1. **Comprehensive English TXT Parser Engine** (`txtParserService.js`): Regex support for `Question 1:`, `Answer:`, `Ans:`, `Key:`, `Explain:`, `Explanation:`, `Solution:`, `Reason:`, `Note:` and combined line syntax (`Answer: A - Solution: ...`).
+  2. **Smart English Explanation Fallback** (`txtParserService.js`): Context-aware educational generator producing natural English explanations (*"The correct answer is A: '...'"*) when explanation lines are omitted in English quizzes.
+  3. **Bilingual Sample Question Presets** (`index.html`, `uploadView.js`): Added Preset 2 button ⚡ 🇬🇧 **Đề Mẫu Tiếng Anh (English Business & Grammar)** alongside Preset 1 ⚡ 🇻🇳 **Đề Mẫu CNTT Tiếng Việt**.
+  4. **Bilingual Textarea Guidance & Placeholder** (`index.html`): Form textarea pre-configured with examples for both Vietnamese and English format standards.
+  5. **AI Quiz Generator Prompt Sync** (`aiService.js`): Synchronized Google Gemini system prompt to output pure `Question X:`, `Answer:`, `Explanation:` format when language is set to English.
+- **Verification & Checksum:** 100% Pass (`17/17` files verified). SHA256: `69FC4E0`.
+
+---
+
 ### 2026-08-15 — Eurus Quiz Master v3.3 Release (`SPEC-2.0_ai_quiz_generator.md`)
 - **Milestone:** Eurus Quiz Master v3.3 Shipped (Dynamic Model Discovery in Generator & Deprecated Model Purge).
 - **Features Implemented:**
