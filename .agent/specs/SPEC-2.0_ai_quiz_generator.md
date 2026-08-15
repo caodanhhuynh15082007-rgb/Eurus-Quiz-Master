@@ -1,6 +1,6 @@
 # 📜 SPEC-2.0: AI Quiz Generator via Google AI Studio API Key & Dynamic Model Auto-Sync
 
-> **Status:** SPEC_PLANNED | **Feature:** Dynamic Discovery for Quiz Generation & Auto-Purging Deprecated Endpoints
+> **Status:** SPEC_CHALLENGED_AND_LOCKED | **Feature:** Dynamic Discovery for Quiz Generation & Auto-Purging Deprecated Endpoints
 
 ---
 
