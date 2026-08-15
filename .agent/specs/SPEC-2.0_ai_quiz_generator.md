@@ -58,4 +58,4 @@ services:
 # 📝 3. WORK CHECKPOINT MATRIX
 
 ## Task 1: Auto-Purge Deprecated Models & Enforce Dynamic Discovery in Generator
-- [ ] `[MODIFY]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Purge `gemini-1.0-pro`, fetch `discoverAvailableModels()` inside `generateQuizContent()`, and ensure seamless multi-model fallback.
+- [x] `[MODIFY]` [js/services/aiService.js](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/js/services/aiService.js): Purge `gemini-1.0-pro`, fetch `discoverAvailableModels()` inside `generateQuizContent()`, and ensure seamless multi-model fallback.

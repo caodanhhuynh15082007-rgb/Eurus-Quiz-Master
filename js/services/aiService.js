@@ -1,7 +1,7 @@
 /**
  * AiService - Universal Google AI Studio (Gemini REST API) Client.
  * Implements Dynamic Model Discovery (`GET /v1beta/models`), Robust Key Sanitization,
- * Multi-Tier Model Fallback (12+ Gemini models), Vietnamese Error Translator,
+ * Multi-Tier Model Fallback (Gemini 2.5, 2.0, 1.5 Flash/Pro), Vietnamese Error Translator,
  * and AbortController timeout guards.
  */
 class AiService {
@@ -9,7 +9,7 @@ class AiService {
     this.STORAGE_KEY_API_KEY = 'eurus_ai_studio_api_key';
     this.STORAGE_KEY_ACTIVE_MODEL = 'eurus_ai_studio_active_model';
     
-    // Comprehensive list of candidate Gemini models in priority order
+    // Modern candidate Gemini models (purged deprecated gemini-1.0-pro)
     this.CANDIDATE_MODELS = [
       'gemini-2.5-flash',
       'gemini-2.0-flash',
@@ -18,8 +18,7 @@ class AiService {
       'gemini-1.5-flash-latest',
       'gemini-1.5-flash-8b',
       'gemini-1.5-pro',
-      'gemini-1.5-pro-latest',
-      'gemini-1.0-pro'
+      'gemini-1.5-pro-latest'
     ];
     this.API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
   }
@@ -88,10 +87,11 @@ class AiService {
       if (response.ok) {
         const data = await response.json();
         if (data.models && Array.isArray(data.models)) {
-          // Filter models that support generateContent method
+          // Filter models that support generateContent method and are modern (exclude 1.0)
           const supported = data.models
             .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
-            .map(m => m.name.replace('models/', ''));
+            .map(m => m.name.replace('models/', ''))
+            .filter(m => !m.includes('1.0'));
           
           if (supported.length > 0) {
             return supported;
@@ -239,11 +239,18 @@ CHÚ Ý QUAN TRỌNG:
     let lastError = null;
     let lastStatus = 0;
 
-    // Prefer previously active model if saved
+    // 1. Discover live models dynamically on-the-fly
+    const discovered = await this.discoverAvailableModels(key);
+    
+    // 2. Saved model preference if present
     const savedModel = localStorage.getItem(this.STORAGE_KEY_ACTIVE_MODEL);
-    const candidateList = savedModel 
-      ? Array.from(new Set([savedModel, ...this.CANDIDATE_MODELS]))
-      : this.CANDIDATE_MODELS;
+    
+    // 3. Build prioritized candidate list with only live valid models
+    const candidateList = Array.from(new Set([
+      ...(savedModel && !savedModel.includes('1.0') ? [savedModel] : []),
+      ...discovered,
+      ...this.CANDIDATE_MODELS
+    ]));
 
     for (const model of candidateList) {
       const controller = new AbortController();
