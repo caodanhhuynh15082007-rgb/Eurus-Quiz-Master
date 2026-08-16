@@ -3,7 +3,7 @@ status: IDLE
 active_phase: "Phase 3 & SPEC-5.0 Completed & Shipped (Production Overhaul)"
 active_feature: "Phase 4: Leaderboard & Advanced Quiz Analytics (Awaiting Spec /init)"
 active_spec: ".agent/specs/archive/SPEC-5.0_production_overhaul.md"
-last_commit: "71b0e1a"
+last_commit: "816a039"
 last_test_status: "SHIPPED (DoD verified, Spec c1931d47 archived)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
@@ -71,7 +71,7 @@ Project Root/
 
 ### Session 2026-08-16 — SPEC-5.0 Production Overhaul (v4.1)
 - **Status:** IDLE (Telegram removed, CDN libs localized, true dark theme shipped).
-- **Git Commit:** [`78b5bd9`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Git Commit:** [`1908c7f`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
 - **Changes Made:**
   - **Telegram integration completely removed**: `telegramAuthService.js` replaced with no-op stub; Official tab + `official-register-form` block removed from `index.html`; Telegram Bot Config card removed from Profile view; `profileView.js` and `authView.js` stripped of all Telegram-related code.
   - **Kaspersky CDN bypass**: `jspdf.umd.min.js`, `jspdf.plugin.autotable.min.js`, `xlsx.full.min.js` downloaded locally to `js/libs/` — no more external CDN calls for these libraries.

@@ -170,3 +170,15 @@ This file records all completed session checkpoints, archived feature specs, and
   2. **Global settings persistence:** Added `system_settings` configuration schema table in Supabase.
   3. **Asynchronous Bot Username Syncing:** Updated `telegramAuthService.js` to asynchronously load Bot Username from Supabase and cache it in localStorage, resolving "Username invalid" widget errors on student browsers.
 - **Verification Status:** Pass (SHA256: `8bc01c322cf9a3e6ba4dfe2d415404e22b5e14f4d441147cca79c3531cc9059f`).
+
+---
+
+### 2026-08-16 — SPEC-5.0: Production Overhaul & Asset Localization
+- **Milestone:** Shipped v4.1. Completely decoupled the client application from third-party CDNs and the Telegram Widget API to resolve security alerts (Kaspersky) and rendering issues.
+- **Features Implemented:**
+  1. **CDNs Purged & Localized**: Downloaded and hosted Supabase, jsPDF, AutoTable, and SheetJS UMD bundles inside the `js/libs/` directory. Removed all external script resource calls.
+  2. **Self-Hosted Typography**: Downloaded and hosted font packages for Inter, Outfit, and Roboto inside the `css/fonts/` directory. Configured static relative `@font-face` bindings in `css/app.css` and removed external preconnects to Google Fonts API.
+  3. **Telegram Core Deletion**: Cleaned up the 3-tab auth view to a clean 2-tab authentication form. Replaced `telegramAuthService.js` with an inert mock stub. Removed all Telegram bot profile configuration panels.
+  4. **Robust Safe Rendering**: Added null guards in user badges UI functions to block navigation transition crashes. Configured input sanitizers (`.trim()`) on forms and guarded config functions against `undefined` parameters.
+- **Verification Status:** Pass (SHA256: `c1931d474417335895cecf738adc37bbf7da7f4a76f5e06f925900bef4d655ca`).
+
