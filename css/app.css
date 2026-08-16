@@ -75,6 +75,14 @@
   font-display: swap;
 }
 
+/* Roboto — used by jsPDF for Vietnamese PDF export */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/Roboto-Regular.ttf') format('truetype');
+  font-display: swap;
+}
 
 :root {
   /* Color Palette - True OLED Dark Mode */
