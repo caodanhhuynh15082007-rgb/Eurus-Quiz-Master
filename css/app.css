@@ -1,17 +1,16 @@
 /* ==========================================================================
    Eurus Web Quiz System - Premium Glassmorphism Design System
    ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+/* Note: Google Fonts loaded via <link> in index.html for faster, Kaspersky-safe loading */
 
 :root {
-  /* Color Palette - Vibrant Dark Mode */
-  --bg-primary: #0b0f19;
-  --bg-secondary: #111827;
-  --bg-card: rgba(30, 41, 59, 0.65);
-  --bg-card-hover: rgba(51, 65, 85, 0.75);
-  --bg-glass: rgba(15, 23, 42, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.12);
+  /* Color Palette - True OLED Dark Mode */
+  --bg-primary: #070b12;
+  --bg-secondary: #0d1117;
+  --bg-card: rgba(22, 32, 48, 0.70);
+  --bg-card-hover: rgba(40, 55, 75, 0.80);
+  --bg-glass: rgba(10, 16, 30, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.09);
   --glass-border-hover: rgba(99, 102, 241, 0.4);
 
   /* Primary Accent & Gradients */
@@ -65,10 +64,14 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  /* Font smoothing for crisp text on dark backgrounds */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(217, 70, 239, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(217, 70, 239, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
 }
 

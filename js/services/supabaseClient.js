@@ -1,6 +1,7 @@
 /**
  * SupabaseClient - Direct Cloud Database Integration for Eurus Quiz Master.
  * Supports environment variables, window global runtime keys, and resilient LocalStorage fallbacks.
+ * Note: system_settings table methods removed (Telegram integration deprecated).
  */
 
 class SupabaseService {
@@ -8,14 +9,12 @@ class SupabaseService {
     this.STORAGE_KEY_URL = 'eurus_supabase_url';
     this.STORAGE_KEY_KEY = 'eurus_supabase_key';
 
-    // 1. Read from Environment (Vite / Node if present), window config, or LocalStorage
-    this.supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) ||
-                       window.__ENV?.VITE_SUPABASE_URL ||
+    // Read from window config or LocalStorage
+    this.supabaseUrl = window.__ENV?.VITE_SUPABASE_URL ||
                        localStorage.getItem(this.STORAGE_KEY_URL) ||
                        '';
 
-    this.supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
-                           window.__ENV?.VITE_SUPABASE_ANON_KEY ||
+    this.supabaseAnonKey = window.__ENV?.VITE_SUPABASE_ANON_KEY ||
                            localStorage.getItem(this.STORAGE_KEY_KEY) ||
                            '';
 
@@ -47,7 +46,8 @@ class SupabaseService {
   }
 
   /**
-   * Universal Helper to Insert Records with fallback
+   * Universal Helper to Insert Records with offline fallback.
+   * Used for quiz_attempts, saved_quizzes, question_feedbacks.
    */
   async insertRecord(tableName, payload) {
     if (!this.client) {
@@ -75,54 +75,6 @@ class SupabaseService {
     } catch (err) {
       console.error(`Supabase Network Error [${tableName}]:`, err);
       return { success: false, error: err.message };
-    }
-  }
-
-  /**
-   * Fetch a setting value by key
-   */
-  async fetchSetting(key) {
-    if (!this.client) this.initClient();
-    if (!this.client) return null;
-
-    try {
-      const { data, error } = await this.client
-        .from('system_settings')
-        .select('value')
-        .eq('key', key)
-        .maybeSingle();
-
-      if (error) {
-        console.error(`Supabase Fetch Setting Error [${key}]:`, error);
-        return null;
-      }
-      return data ? data.value : null;
-    } catch (err) {
-      console.error(`Supabase Network Error fetching setting [${key}]:`, err);
-      return null;
-    }
-  }
-
-  /**
-   * Save or update a setting
-   */
-  async updateSetting(key, value) {
-    if (!this.client) this.initClient();
-    if (!this.client) return false;
-
-    try {
-      const { error } = await this.client
-        .from('system_settings')
-        .upsert({ key, value, updated_at: new Date().toISOString() });
-
-      if (error) {
-        console.error(`Supabase Update Setting Error [${key}]:`, error);
-        return false;
-      }
-      return true;
-    } catch (err) {
-      console.error(`Supabase Network Error updating setting [${key}]:`, err);
-      return false;
     }
   }
 }
