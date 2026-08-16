@@ -40,8 +40,9 @@ class SupabaseService {
   saveConfig(url, anonKey) {
     if (url) localStorage.setItem(this.STORAGE_KEY_URL, url.trim());
     if (anonKey) localStorage.setItem(this.STORAGE_KEY_KEY, anonKey.trim());
-    this.supabaseUrl = url.trim();
-    this.supabaseAnonKey = anonKey.trim();
+    // Fix #6: only assign after guard to avoid .trim() on undefined
+    this.supabaseUrl = url ? url.trim() : this.supabaseUrl;
+    this.supabaseAnonKey = anonKey ? anonKey.trim() : this.supabaseAnonKey;
     this.initClient();
   }
 

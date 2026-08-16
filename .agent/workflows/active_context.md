@@ -1,10 +1,10 @@
 ---
 status: IDLE
-active_phase: "Phase 3 Completed & Shipped (v4.0 Master Release - PDF & Excel Report Exporter)"
+active_phase: "Phase 3 Completed & Shipped (SPEC-5.0 Production Overhaul - Telegram Removed, CDN Localized, True Dark Theme)"
 active_feature: "Phase 4: Leaderboard & Advanced Quiz Analytics (Awaiting Spec /init)"
 active_spec: ".agent/specs/archive/SPEC-4.0_report_export.md"
-last_commit: "143326b"
-last_test_status: "PASS (Phase 3 PDF & Excel Export System Files Saved & Verified)"
+last_commit: "78b5bd9"
+last_test_status: "PASS (SPEC-5.0 Overhaul — 9 files changed, Pushed to GitHub)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -15,7 +15,7 @@ memory_links:
 
 # ⚡ ACTIVE CONTEXT — Eurus Agent Living Memory
 
-> **Last Checkpoint:** 2026-08-15 | **Status:** Eurus Quiz Master v3.5 Shipped (`da46f72`)
+> **Last Checkpoint:** 2026-08-16 | **Status:** Eurus Quiz Master v4.1 Shipped (`78b5bd9`)
 
 ---
 
@@ -25,11 +25,12 @@ memory_links:
 Project Root/
 ├── 📄 index.html                        (SPA Entry Shell & Dynamic View Containers)
 ├── 📂 css/
-│   └── 📄 styles.css                    (Design System: Dark Theme, Glassmorphism, Neon Glow)
+│   └── 📄 app.css                    (Design System: True OLED Dark Theme #070b12, Glassmorphism, Neon Glow)
 ├── 📂 js/
 │   ├── 📄 app.js                        (Core Application Bootstrap & SPA State Router)
-│   ├── 📂 services/                     (authService, telegramAuthService, txtParserService, quizEngineService, historyService, savedService, feedbackService, aiService)
-│   └── 📂 views/                        (authView, uploadView, quizView, resultView, historyView, savedView, profileView)
+│   ├── 📂 libs/                         (LOCAL bundles: jspdf.umd.min.js, jspdf.plugin.autotable.min.js, xlsx.full.min.js)
+│   ├── 📂 services/                     (authService, supabaseClient, txtParserService, quizEngineService, historyService, savedService, feedbackService, aiService, reportExportService)
+│   └── 📂 views/                        (authView [2-tab only], uploadView, quizView, resultView, historyView, savedView, profileView)
 ├── 📄 AGENTS.md                        (Tier 1 Constitution & Auto-Router)
 └── 📂 .agent/                          (Eurus Operating System & Memory)
 ```
@@ -67,3 +68,14 @@ Project Root/
   - `telegramAuthService.js`: Implemented dynamic `syncBotUsername` to fetch custom Telegram Bot Username from Supabase and cache it in localStorage.
   - `authView.js`: Made renderTelegramWidget asynchronous, querying the dynamic bot username before loading widget script.
   - `profileView.js`: Synchronizes bot username updates directly to Supabase system settings.
+
+### Session 2026-08-16 — SPEC-5.0 Production Overhaul (v4.1)
+- **Status:** IDLE (Telegram removed, CDN libs localized, true dark theme shipped).
+- **Git Commit:** [`78b5bd9`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+- **Changes Made:**
+  - **Telegram integration completely removed**: `telegramAuthService.js` replaced with no-op stub; Official tab + `official-register-form` block removed from `index.html`; Telegram Bot Config card removed from Profile view; `profileView.js` and `authView.js` stripped of all Telegram-related code.
+  - **Kaspersky CDN bypass**: `jspdf.umd.min.js`, `jspdf.plugin.autotable.min.js`, `xlsx.full.min.js` downloaded locally to `js/libs/` — no more external CDN calls for these libraries.
+  - **Google Fonts fix**: `@import` removed from `css/app.css`; replaced with `<link rel="preconnect">` + `<link rel="stylesheet">` in `<head>` for faster, non-blocking font load.
+  - **True OLED dark theme**: `--bg-primary` deepened from `#0b0f19` → `#070b12`; `--bg-secondary` from `#111827` → `#0d1117`; radial gradient overlays toned down; `--glass-border` from 0.12→0.09 opacity.
+  - **Font smoothing**: Added `-webkit-font-smoothing: antialiased` + `text-rendering: optimizeLegibility` to `body`.
+  - **supabaseClient.js**: Simplified — removed `fetchSetting`/`updateSetting` (no longer needed); kept `insertRecord` for `quiz_attempts` logging.

@@ -8,6 +8,7 @@ class AuthView {
   }
 
   init() {
+    this.switchTab('login'); // Fix #4: normalize tab state on every init
     this.renderUserBadge();
   }
 
@@ -31,10 +32,14 @@ class AuthView {
     const navStatus = document.getElementById('nav-user-status');
     const navAvatar = document.getElementById('nav-avatar');
 
+    // Fix #1: null-guard all DOM elements before access
+    if (!navUsername || !navStatus || !navAvatar) return;
+
     if (currentUser) {
       navUsername.textContent = currentUser.fullname || currentUser.username;
+      // Fix #7: relabel isOfficial badge — no misleading "verified" implication
       if (currentUser.isOfficial) {
-        navStatus.innerHTML = '<span style="color: #34d399; font-weight: 600;">✔ Học viên chính thức</span>';
+        navStatus.innerHTML = '<span style="color: #34d399; font-weight: 600;">✔ Thành viên đã đăng ký</span>';
         navAvatar.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
       } else {
         navStatus.innerHTML = '<span style="color: #fbbf24;">Học viên thường</span>';
@@ -51,8 +56,14 @@ class AuthView {
 
   handleLogin(event) {
     event.preventDefault();
-    const usernameInput = document.getElementById('login-username').value;
-    const passwordInput = document.getElementById('login-password').value;
+    // Fix #5: trim all form inputs to prevent whitespace login failures
+    const usernameInput = document.getElementById('login-username').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
+
+    if (!usernameInput || !passwordInput) {
+      window.app.showToast('Vui lòng nhập đầy đủ thông tin đăng nhập!', 'error');
+      return;
+    }
 
     try {
       const user = window.authService.login(usernameInput, passwordInput);
@@ -66,10 +77,16 @@ class AuthView {
 
   handleRegister(event) {
     event.preventDefault();
-    const fullname = document.getElementById('reg-fullname').value;
-    const username = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
+    // Fix #5: trim all registration inputs
+    const fullname = document.getElementById('reg-fullname').value.trim();
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value.trim();
+
+    if (!fullname || !username || !email || !password) {
+      window.app.showToast('Vui lòng điền đầy đủ tất cả các trường!', 'error');
+      return;
+    }
 
     try {
       const user = window.authService.register({ username, email, password, fullname, isOfficial: false });

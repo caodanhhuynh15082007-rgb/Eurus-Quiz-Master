@@ -1,6 +1,7 @@
 /**
  * ReportExportService - Handles client-side PDF & Excel reports generation for Eurus Quiz Master.
- * Integrates jsPDF, jsPDF-AutoTable, and SheetJS. Supports dynamic Google Fonts fetch to fix Vietnamese encoding.
+ * Integrates jsPDF, jsPDF-AutoTable, and SheetJS.
+ * Note: Roboto font loaded from local css/fonts/ — no CDN calls (Kaspersky-safe).
  */
 class ReportExportService {
   stripHtml(html) {
@@ -10,10 +11,10 @@ class ReportExportService {
 
   async loadUnicodeFont(doc) {
     try {
-      // Fetch Roboto Regular from Google Fonts CDN to support Vietnamese characters
-      const fontUrl = 'https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.ttf';
+      // Fix #3: Load Roboto from local bundle — eliminates fonts.gstatic.com CDN call
+      const fontUrl = 'css/fonts/Roboto-Regular.ttf';
       const response = await fetch(fontUrl);
-      if (!response.ok) throw new Error('CDN response was not ok');
+      if (!response.ok) throw new Error(`Local font not found: ${fontUrl}`);
       const arrayBuffer = await response.arrayBuffer();
 
       // Convert ArrayBuffer to Base64
@@ -29,10 +30,10 @@ class ReportExportService {
       doc.addFileToVFS('Roboto-Regular.ttf', base64);
       doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
       doc.setFont('Roboto');
-      console.log('🤖 Loaded Roboto Unicode font successfully for PDF rendering.');
+      console.log('✅ Loaded Roboto Unicode font from local bundle for PDF rendering.');
       return true;
     } catch (e) {
-      console.warn('Could not load Unicode Roboto font, falling back to Helvetica:', e);
+      console.warn('Could not load local Roboto font, falling back to Helvetica:', e);
       doc.setFont('helvetica');
       return false;
     }
