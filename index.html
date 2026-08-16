@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eurus Quiz Master - Hệ Thống Trắc Nghiệm Thông Minh Từ File TXT</title>
   <meta name="description" content="Hệ thống tạo bộ câu hỏi trắc nghiệm tự động từ file TXT, chấm điểm tự động, quản lý học viên và lịch sử làm bài.">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
   <div class="app-layout">
@@ -467,7 +467,9 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <h3 class="section-title" style="font-size: 1.5rem;">🔍 Xem Chi Tiết Đáp Án & Lời Giải</h3>
-          <div style="display: flex; gap: 0.75rem;">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="btn-export-result-pdf">📄 Xuất Báo Cáo PDF</button>
+            <button class="btn btn-secondary" id="btn-export-result-excel">📊 Xuất Excel Chi Tiết</button>
             <button class="btn btn-secondary" onclick="app.router.navigate('upload')">🔄 Làm Bài Khác</button>
             <button class="btn btn-primary" onclick="app.router.navigate('history')">📜 Xem Lịch Sử</button>
           </div>
@@ -489,8 +491,12 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
             <p class="section-subtitle">Danh sách các lượt làm bài trắc nghiệm đã hoàn thành</p>
           </div>
 
-          <div style="width: 300px;">
-            <input type="text" id="history-search-input" class="form-input" placeholder="🔍 Tìm theo tên bài thi..." oninput="app.views.history.handleSearch()">
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="btn-export-history-pdf" style="padding: 0.5rem 0.85rem; font-size: 0.85rem;">📄 Xuất PDF Lịch Sử</button>
+            <button class="btn btn-secondary" id="btn-export-history-excel" style="padding: 0.5rem 0.85rem; font-size: 0.85rem;">📊 Xuất Excel Lịch Sử</button>
+            <div style="width: 250px; margin-left: 0.5rem;">
+              <input type="text" id="history-search-input" class="form-input" placeholder="🔍 Tìm theo tên bài thi..." oninput="app.views.history.handleSearch()">
+            </div>
           </div>
         </div>
 
@@ -666,7 +672,10 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
           <!-- Dynamic Read-Only Review Cards -->
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button class="btn btn-secondary" id="btn-modal-export-pdf">
+          📄 Xuất PDF Chi Tiết
+        </button>
         <button class="btn btn-primary" id="btn-save-modal" onclick="app.views.history.saveCurrentModalQuiz()">
           ⭐ Lưu Bài Kiểm Tra Này
         </button>
@@ -759,6 +768,11 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
   <!-- External Cloud Database Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- Report Export Libraries (jsPDF, jsPDF-AutoTable, SheetJS) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <!-- JavaScript Modular Scripts -->
   <script src="js/services/supabaseClient.js"></script>
   <script src="js/services/authService.js"></script>
@@ -769,6 +783,7 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
   <script src="js/services/savedService.js"></script>
   <script src="js/services/feedbackService.js"></script>
   <script src="js/services/aiService.js"></script>
+  <script src="js/services/reportExportService.js"></script>
 
   <script src="js/views/authView.js"></script>
   <script src="js/views/uploadView.js"></script>

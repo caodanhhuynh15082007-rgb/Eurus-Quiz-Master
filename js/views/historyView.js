@@ -18,6 +18,17 @@ class HistoryView {
     const currentUser = window.authService.getCurrentUser();
 
     const attempts = window.historyService.getAttempts(currentUser ? currentUser.id : null, query);
+    
+    // Bind history exports
+    const btnPdf = document.getElementById('btn-export-history-pdf');
+    const btnExcel = document.getElementById('btn-export-history-excel');
+    if (btnPdf) {
+      btnPdf.onclick = () => window.reportExportService.exportHistoryToPDF(attempts);
+    }
+    if (btnExcel) {
+      btnExcel.onclick = () => window.reportExportService.exportHistoryToExcel(attempts);
+    }
+
     const tableBody = document.getElementById('history-table-body');
     if (!tableBody) return;
 
@@ -200,6 +211,12 @@ class HistoryView {
 
       container.appendChild(card);
     });
+
+    // Bind modal export
+    const btnModalPdf = document.getElementById('btn-modal-export-pdf');
+    if (btnModalPdf) {
+      btnModalPdf.onclick = () => window.reportExportService.exportAttemptToPDF(attempt);
+    }
 
     // Show modal
     const modal = document.getElementById('history-modal');

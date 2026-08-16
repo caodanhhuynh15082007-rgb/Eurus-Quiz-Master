@@ -11,7 +11,8 @@ class App {
       history: window.historyService,
       saved: window.savedService,
       feedback: window.feedbackService,
-      ai: window.aiService
+      ai: window.aiService,
+      reportExport: window.reportExportService
     };
 
     this.views = {

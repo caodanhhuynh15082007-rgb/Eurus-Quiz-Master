@@ -4,11 +4,22 @@
 class ResultView {
   renderResult(attempt) {
     if (!attempt) return;
+    this.currentAttempt = attempt;
 
     // Score percent & title
     document.getElementById('res-score-percent').textContent = `${attempt.scorePercentage}%`;
     document.getElementById('res-grade-title').textContent = this.getGradeTitle(attempt.scorePercentage);
     document.getElementById('res-quiz-title').textContent = attempt.quizTitle;
+
+    // Bind exports
+    const btnPdf = document.getElementById('btn-export-result-pdf');
+    const btnExcel = document.getElementById('btn-export-result-excel');
+    if (btnPdf) {
+      btnPdf.onclick = () => window.reportExportService.exportAttemptToPDF(attempt);
+    }
+    if (btnExcel) {
+      btnExcel.onclick = () => window.reportExportService.exportAttemptToExcel(attempt);
+    }
 
     // Time spent
     const mins = Math.floor(attempt.timeSpentSeconds / 60);
