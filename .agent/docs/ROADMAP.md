@@ -42,6 +42,8 @@
 - [x] Phase 3.3: Dynamic Unicode Font Loader & Vietnamese layout scaling for jsPDF (reportExportService.js)
 - [x] Phase 3.4: History Exporter & Attempt spreadsheet workbook compiler (SheetJS)
 - [x] Phase 3.5: Clean-up Vercel static routing and Kaspersky antivirus bypass (css/app.css)
+- [x] Phase 3.6: Production Overhaul (Telegram Removal, Kaspersky CDN Bypass, OLED Dark Theme) ([SPEC-5.0_production_overhaul.md](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.agent/specs/archive/SPEC-5.0_production_overhaul.md)) — **(COMPLETED - Checksum: c1931d474417335895cecf738adc37bbf7da7f4a76f5e06f925900bef4d655ca)**
+
 
 ---
 
