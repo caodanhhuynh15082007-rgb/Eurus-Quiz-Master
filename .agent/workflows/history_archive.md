@@ -160,3 +160,13 @@ This file records all completed session checkpoints, archived feature specs, and
   3. **One-Click Account Verification:** Intercepts secure Telegram login widget callback payload (`id`, `username`, `first_name`) to auto-fill registration fields and map student accounts to a verified Telegram account.
   4. **Database Identity Enforcement** (`authService.js`, `schema.sql`): Added `telegram_id` uniqueness constraint to users table schema in Supabase database to prevent duplicate registration exploitation.
 - **Verification Status:** Pass (SHA256: `839e00f38f5a45326e40a9de87e248b0f018a8f728dc165fddc4cc650ff1edb`).
+
+---
+
+### 2026-08-16 — Patch v3.7: Secure Telegram Widget & Vercel Patch (`implementation_plan.md`)
+- **Milestone:** Released v3.7. Fixed Vercel SPA asset routing and synchronized Telegram Bot Username settings to shared database.
+- **Features Implemented:**
+  1. **Vercel Asset Routing Fix:** Replaced `rewrites` with `routes` containing filesystem check handler in `vercel.json` to prevent static JS/CSS assets being rewritten to index.html.
+  2. **Global settings persistence:** Added `system_settings` configuration schema table in Supabase.
+  3. **Asynchronous Bot Username Syncing:** Updated `telegramAuthService.js` to asynchronously load Bot Username from Supabase and cache it in localStorage, resolving "Username invalid" widget errors on student browsers.
+- **Verification Status:** Pass (SHA256: `8bc01c322cf9a3e6ba4dfe2d415404e22b5e14f4d441147cca79c3531cc9059f`).

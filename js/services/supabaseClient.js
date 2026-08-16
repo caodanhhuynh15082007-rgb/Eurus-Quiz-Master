@@ -77,6 +77,54 @@ class SupabaseService {
       return { success: false, error: err.message };
     }
   }
+
+  /**
+   * Fetch a setting value by key
+   */
+  async fetchSetting(key) {
+    if (!this.client) this.initClient();
+    if (!this.client) return null;
+
+    try {
+      const { data, error } = await this.client
+        .from('system_settings')
+        .select('value')
+        .eq('key', key)
+        .maybeSingle();
+
+      if (error) {
+        console.error(`Supabase Fetch Setting Error [${key}]:`, error);
+        return null;
+      }
+      return data ? data.value : null;
+    } catch (err) {
+      console.error(`Supabase Network Error fetching setting [${key}]:`, err);
+      return null;
+    }
+  }
+
+  /**
+   * Save or update a setting
+   */
+  async updateSetting(key, value) {
+    if (!this.client) this.initClient();
+    if (!this.client) return false;
+
+    try {
+      const { error } = await this.client
+        .from('system_settings')
+        .upsert({ key, value, updated_at: new Date().toISOString() });
+
+      if (error) {
+        console.error(`Supabase Update Setting Error [${key}]:`, error);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.error(`Supabase Network Error updating setting [${key}]:`, err);
+      return false;
+    }
+  }
 }
 
 window.supabaseService = new SupabaseService();

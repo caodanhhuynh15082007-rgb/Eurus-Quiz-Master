@@ -76,13 +76,25 @@ class ProfileView {
     }
   }
 
-  saveBotConfig(event) {
+  async saveBotConfig(event) {
     event.preventDefault();
     const username = document.getElementById('bot-username').value;
 
     try {
+      // Save locally
       window.telegramAuthService.saveBotUsername(username);
-      window.app.showToast('Đã cập nhật cấu hình Telegram Bot cá nhân!', 'success');
+      
+      // Sync to Supabase
+      if (window.supabaseService && window.supabaseService.isConfigured()) {
+        const success = await window.supabaseService.updateSetting('telegram_bot_username', username);
+        if (success) {
+          window.app.showToast('Đã đồng bộ cấu hình Tên Bot Telegram lên Supabase!', 'success');
+        } else {
+          window.app.showToast('Đã lưu cục bộ (Lỗi đồng bộ lên Supabase!)', 'warning');
+        }
+      } else {
+        window.app.showToast('Đã lưu cấu hình Tên Bot Telegram cục bộ (Offline)!', 'success');
+      }
     } catch (e) {
       window.app.showToast(e.message, 'error');
     }

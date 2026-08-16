@@ -92,8 +92,7 @@ class AuthView {
      TELEGRAM LOGIN WIDGET INTEGRATION
      =================================================================== */
 
-  renderTelegramWidget() {
-    const botUsername = window.telegramAuthService.getBotUsername();
+  async renderTelegramWidget() {
     const container = document.getElementById('telegram-widget-container');
     if (!container) return;
 
@@ -104,6 +103,14 @@ class AuthView {
     if (placeholder) {
       placeholder.style.display = 'block';
       placeholder.textContent = 'Đang tải nút xác thực Telegram...';
+    }
+
+    // Dynamic bot username discovery from Supabase setting
+    let botUsername = window.telegramAuthService.getBotUsername();
+    try {
+      botUsername = await window.telegramAuthService.syncBotUsername();
+    } catch (e) {
+      console.warn('Could not fetch Telegram bot username from Supabase, using local fallback:', e);
     }
 
     // Set global callback for the Widget

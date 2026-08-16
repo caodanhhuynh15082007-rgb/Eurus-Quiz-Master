@@ -1,10 +1,10 @@
 ---
 status: IDLE
-active_phase: "Phase 2 Completed & Shipped (v3.6 Master Release - Telegram Login Widget Integration)"
+active_phase: "Phase 2 Completed & Shipped (v3.7 Master Release - Secure Telegram Widget & Vercel Patch)"
 active_feature: "Phase 3: PDF / Excel Report Export for Quiz Results (Awaiting Spec /init)"
 active_spec: ".agent/specs/archive/SPEC-3.0_telegram_integration.md"
-last_commit: "1f7084b"
-last_test_status: "PASS (All 19 System Files Saved & Verified - Manual UI Verification Scheduled)"
+last_commit: "09f9d11"
+last_test_status: "PASS (All 19 System Files & Bug Fixes Saved & Verified)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -57,3 +57,13 @@ Project Root/
   - `authView.js`: Dynamically loads the Telegram Login Widget script, maps global callback for authentication payload, auto-populates registration inputs, and registers official users with `telegramId`.
   - `authService.js`: Supports registration and persistence of permanent `telegramId`.
   - `schema.sql`: Added unique column `telegram_id` to the `users` table.
+
+### Session 2026-08-16 (Patch v3.7) — Secure Telegram Widget & Vercel Patch
+- **Status:** IDLE (Vercel static asset routing MIME fix & Supabase settings synchronization shipped).
+- **Features Added:**
+  - `vercel.json`: Restructured SPA routing to use Vercel's routes configuration with static filesystem checks, fixing broken UI layout in production.
+  - `schema.sql`: Added global `system_settings` configuration table with RLS select/insert/update policies.
+  - `supabaseClient.js`: Added fetchSetting and updateSetting methods to support remote system configurations.
+  - `telegramAuthService.js`: Implemented dynamic `syncBotUsername` to fetch custom Telegram Bot Username from Supabase and cache it in localStorage.
+  - `authView.js`: Made renderTelegramWidget asynchronous, querying the dynamic bot username before loading widget script.
+  - `profileView.js`: Synchronizes bot username updates directly to Supabase system settings.

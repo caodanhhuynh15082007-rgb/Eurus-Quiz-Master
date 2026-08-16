@@ -83,3 +83,21 @@ CREATE POLICY "Allow public delete on saved_quizzes" ON public.saved_quizzes FOR
 ALTER TABLE public.question_feedbacks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public select on question_feedbacks" ON public.question_feedbacks FOR SELECT USING (true);
 CREATE POLICY "Allow public insert on question_feedbacks" ON public.question_feedbacks FOR INSERT WITH CHECK (true);
+
+-- 5. BẢNG CẤU HÌNH TOÀN CỤC (system_settings)
+CREATE TABLE IF NOT EXISTS public.system_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Cấp quyền đọc ghi công khai cho bảng system_settings
+ALTER TABLE public.system_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public select on system_settings" ON public.system_settings FOR SELECT USING (true);
+CREATE POLICY "Allow public insert on system_settings" ON public.system_settings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update on system_settings" ON public.system_settings FOR UPDATE USING (true);
+
+-- Seed cấu hình mặc định cho tên Bot Telegram
+INSERT INTO public.system_settings (key, value)
+VALUES ('telegram_bot_username', 'EurusQuizBot')
+ON CONFLICT (key) DO NOTHING;

@@ -17,7 +17,7 @@
 - [x] Phase 2.10: Full Bilingual English Format Support (`Question 1:`, `Answer:`, `Explain/Solution:`) — **(SHIPPED)**
 - [x] Phase 2.11: Official Account Telegram OTP Verification (6-Digit Code) & Storage Partitioning (Guest Session vs Official Persistent) — **(SHIPPED)**
 - [x] Phase 2.12: Direct Cloud Database Integration via Supabase (quiz_attempts, saved_quizzes, users, question_feedbacks tables) & RLS Policies — **(SHIPPED - Commit: a8f5587)**
-- [x] Phase 2.13: Secure Telegram Login Widget Integration (Zero Token Exposure & Low Friction) — **(SHIPPED - Checksum: 839e00f38f5a45326e40a9de87e248b0f018a8f728dc165fddc4cc650ff1edb)**
+- [x] Phase 2.13: Secure Telegram Login Widget Integration & Vercel MIME Routing Patch — **(SHIPPED - Checksum: 8bc01c322cf9a3e6ba4dfe2d415404e22b5e14f4d441147cca79c3531cc9059f)**
 
 ---
 
