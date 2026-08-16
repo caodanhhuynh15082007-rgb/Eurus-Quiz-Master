@@ -10,6 +10,7 @@ class ProfileView {
     const usernameInput = document.getElementById('prof-username');
     const phoneInput = document.getElementById('prof-phone');
     const telegramInput = document.getElementById('prof-telegram');
+    const botUsernameInput = document.getElementById('bot-username');
     const displayAvatar = document.getElementById('profile-avatar-lg');
     const displayName = document.getElementById('prof-display-name');
     const displayStatus = document.getElementById('prof-display-status');
@@ -40,6 +41,11 @@ class ProfileView {
       if (displayStatus) displayStatus.innerHTML = '<span class="badge badge-guest">⚠️ Chế độ Khách (F5 xóa sạch dữ liệu)</span>';
     }
 
+    // Populate Telegram Bot inputs
+    if (botUsernameInput) {
+      botUsernameInput.value = window.telegramAuthService.getBotUsername();
+    }
+
     // Render Stats Overview
     const stats = window.historyService.getStudentStats(currentUser ? currentUser.id : null);
     document.getElementById('stat-total-attempts').textContent = stats.totalAttempts;
@@ -65,6 +71,18 @@ class ProfileView {
       window.authView.renderUserBadge();
       this.renderView();
       window.app.showToast('Đã lưu thông tin hồ sơ học viên thành công!', 'success');
+    } catch (e) {
+      window.app.showToast(e.message, 'error');
+    }
+  }
+
+  saveBotConfig(event) {
+    event.preventDefault();
+    const username = document.getElementById('bot-username').value;
+
+    try {
+      window.telegramAuthService.saveBotUsername(username);
+      window.app.showToast('Đã cập nhật cấu hình Telegram Bot cá nhân!', 'success');
     } catch (e) {
       window.app.showToast(e.message, 'error');
     }

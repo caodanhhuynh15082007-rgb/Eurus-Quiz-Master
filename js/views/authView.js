@@ -4,47 +4,17 @@
 class AuthView {
   constructor() {
     this.activeTab = 'login';
-    this.otpTimerInterval = null;
   }
 
   init() {
     this.renderUserBadge();
-    this.setupOtpInputAutoJump();
-  }
-
-  setupOtpInputAutoJump() {
-    for (let i = 1; i <= 6; i++) {
-      const input = document.getElementById(`otp-digit-${i}`);
-      if (!input) continue;
-
-      input.addEventListener('input', (e) => {
-        const val = e.target.value;
-        if (val.length >= 1) {
-          e.target.value = val.slice(-1); // keep single digit
-          if (i < 6) {
-            const next = document.getElementById(`otp-digit-${i + 1}`);
-            if (next) next.focus();
-          }
-        }
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !e.target.value && i > 1) {
-          const prev = document.getElementById(`otp-digit-${i - 1}`);
-          if (prev) {
-            prev.focus();
-            prev.value = '';
-          }
-        }
-      });
-    }
   }
 
   switchTab(tabName) {
     this.activeTab = tabName;
     const loginForm = document.getElementById('form-login');
     const regForm = document.getElementById('form-register');
-    const officialRegForm = document.getElementById('form-official-register');
+    const officialRegForm = document.getElementById('official-register-form');
     const loginTabBtn = document.getElementById('tab-login-btn');
     const regTabBtn = document.getElementById('tab-register-btn');
     const officialTabBtn = document.getElementById('tab-official-btn');
@@ -56,6 +26,10 @@ class AuthView {
     if (loginTabBtn) loginTabBtn.className = tabName === 'login' ? 'btn btn-primary' : 'btn btn-secondary';
     if (regTabBtn) regTabBtn.className = tabName === 'register' ? 'btn btn-primary' : 'btn btn-secondary';
     if (officialTabBtn) officialTabBtn.className = tabName === 'official' ? 'btn btn-primary' : 'btn btn-secondary';
+
+    if (tabName === 'official') {
+      this.renderTelegramWidget();
+    }
   }
 
   renderUserBadge() {
@@ -115,130 +89,120 @@ class AuthView {
   }
 
   /* ===================================================================
-     TELEGRAM BOT OTP OFFICIAL REGISTRATION FLOW
+     TELEGRAM LOGIN WIDGET INTEGRATION
      =================================================================== */
 
-  async startOfficialRegistration(event) {
-    event.preventDefault();
-    const fullname = document.getElementById('off-fullname').value;
-    const username = document.getElementById('off-username').value;
-    const email = document.getElementById('off-email').value;
-    const password = document.getElementById('off-password').value;
-    const phone = document.getElementById('off-phone').value;
-    const telegramUser = document.getElementById('off-telegram').value;
-    const telegramChatId = document.getElementById('off-chat-id') ? document.getElementById('off-chat-id').value : '';
+  renderTelegramWidget() {
+    const botUsername = window.telegramAuthService.getBotUsername();
+    const container = document.getElementById('telegram-widget-container');
+    if (!container) return;
 
-    const btn = document.getElementById('btn-submit-official-req');
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '⏳ Đang kết nối Bot Telegram...';
+    container.innerHTML = ''; // clear existing widget
+
+    // Set placeholder text
+    const placeholder = document.getElementById('telegram-widget-placeholder');
+    if (placeholder) {
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Đang tải nút xác thực Telegram...';
     }
 
-    try {
-      const result = await window.telegramAuthService.requestRegistrationOtp({
-        fullname,
-        username,
-        email,
-        password,
-        phone,
-        telegramUser,
-        telegramChatId
-      });
-
-      this.openOtpModal(result);
-      window.app.showToast(result.deliveryMessage || 'Đã phát mã xác thực 6 số!', 'success');
-    } catch (err) {
-      window.app.showToast(err.message, 'error');
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '🚀 Xác Nhận & Nhận Mã OTP Qua Telegram';
-      }
-    }
-  }
-
-  openOtpModal(otpResult) {
-    const modal = document.getElementById('telegram-otp-modal');
-    const botLink = document.getElementById('telegram-bot-direct-link');
-    const demoOtpDisplay = document.getElementById('demo-otp-preview');
-
-    if (botLink) {
-      botLink.href = `https://t.me/${otpResult.botUsername || 'EurusQuizBot'}`;
-      botLink.textContent = `@${otpResult.botUsername || 'EurusQuizBot'}`;
-    }
-
-    if (demoOtpDisplay) {
-      demoOtpDisplay.textContent = otpResult.otpCode;
-    }
-
-    // Reset OTP inputs
-    for (let i = 1; i <= 6; i++) {
-      const input = document.getElementById(`otp-digit-${i}`);
-      if (input) input.value = '';
-    }
-    const first = document.getElementById('otp-digit-1');
-    if (first) setTimeout(() => first.focus(), 150);
-
-    // Start 180s countdown timer
-    this.startOtpCountdown(180);
-
-    if (modal) modal.classList.add('active');
-  }
-
-  closeOtpModal() {
-    const modal = document.getElementById('telegram-otp-modal');
-    if (modal) modal.classList.remove('active');
-    if (this.otpTimerInterval) clearInterval(this.otpTimerInterval);
-  }
-
-  startOtpCountdown(durationSeconds) {
-    let timeLeft = durationSeconds;
-    const timerElem = document.getElementById('otp-countdown-text');
-    if (this.otpTimerInterval) clearInterval(this.otpTimerInterval);
-
-    const updateText = () => {
-      const mins = Math.floor(timeLeft / 60);
-      const secs = timeLeft % 60;
-      if (timerElem) {
-        timerElem.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-      }
-      if (timeLeft <= 0) {
-        clearInterval(this.otpTimerInterval);
-        if (timerElem) timerElem.textContent = '00:00 (Mã đã hết hạn)';
-      }
-      timeLeft--;
+    // Set global callback for the Widget
+    window.onTelegramAuth = (user) => {
+      this.handleTelegramAuthSuccess(user);
     };
 
-    updateText();
-    this.otpTimerInterval = setInterval(updateText, 1000);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    script.setAttribute('data-telegram-login', botUsername);
+    script.setAttribute('data-size', 'large');
+    script.setAttribute('data-radius', '10');
+    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+    script.setAttribute('data-request-access', 'write');
+
+    const warning = document.getElementById('telegram-widget-warning');
+    if (warning) warning.style.display = 'none';
+
+    // Timeout check for Brave Shield or AdBlockers blocking Telegram scripts
+    const checkTimeout = setTimeout(() => {
+      const iframe = container.querySelector('iframe');
+      if (!iframe) {
+        if (warning) warning.style.display = 'block';
+        if (placeholder) placeholder.textContent = 'Không thể tải nút Telegram. Vui lòng kiểm tra chặn quảng cáo!';
+      }
+    }, 3500);
+
+    script.onload = () => {
+      setTimeout(() => {
+        const iframe = container.querySelector('iframe');
+        if (iframe) {
+          if (placeholder) placeholder.style.display = 'none';
+          if (warning) warning.style.display = 'none';
+          clearTimeout(checkTimeout);
+        }
+      }, 300);
+    };
+
+    container.appendChild(script);
   }
 
-  submitOtpVerification(event) {
-    if (event) event.preventDefault();
+  handleTelegramAuthSuccess(user) {
+    console.log('Telegram verification success:', user);
+    
+    const fullnameInput = document.getElementById('off-fullname');
+    const telegramInput = document.getElementById('off-telegram');
+    const telegramIdInput = document.getElementById('off-telegram-id');
+    const submitBtn = document.getElementById('btn-submit-official-req');
 
-    let otpCode = '';
-    for (let i = 1; i <= 6; i++) {
-      const input = document.getElementById(`otp-digit-${i}`);
-      if (input) otpCode += input.value.trim();
+    if (fullnameInput) {
+      fullnameInput.value = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'Học Viên Telegram';
+      fullnameInput.style.opacity = '1';
+    }
+    if (telegramInput) {
+      telegramInput.value = user.username ? `@${user.username}` : `ID: ${user.id}`;
+      telegramInput.style.opacity = '1';
+    }
+    if (telegramIdInput) {
+      telegramIdInput.value = user.id;
+    }
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '🚀 Hoàn Tất Đăng Ký Tài Khoản';
     }
 
-    if (otpCode.length !== 6) {
-      window.app.showToast('Vui lòng nhập đầy đủ 6 chữ số mã xác thực!', 'error');
+    window.app.showToast('Xác thực Telegram thành công! Vui lòng hoàn tất đăng ký.', 'success');
+  }
+
+  handleOfficialRegister(event) {
+    event.preventDefault();
+    const email = document.getElementById('off-email').value;
+    const password = document.getElementById('off-password').value;
+    const fullname = document.getElementById('off-fullname').value;
+    const telegramUser = document.getElementById('off-telegram').value;
+    const telegramId = document.getElementById('off-telegram-id').value;
+
+    if (!telegramId) {
+      window.app.showToast('Vui lòng hoàn tất liên kết xác thực Telegram trước!', 'error');
       return;
     }
 
+    // Auto-generate unique username using email prefix & Telegram ID
+    const emailPrefix = email.split('@')[0];
+    const username = `${emailPrefix}_${telegramId}`;
+
     try {
-      const userPayload = window.telegramAuthService.verifyOtp(otpCode);
-      
-      // Register official account
-      const newUser = window.authService.register({
-        ...userPayload,
+      const user = window.authService.register({
+        username,
+        email,
+        password,
+        fullname,
+        telegramUser,
+        telegramId,
         isOfficial: true
       });
 
-      this.closeOtpModal();
       this.renderUserBadge();
-      window.app.showToast(`🎉 Chúc mừng ${newUser.fullname}! Bạn đã trở thành Học Viên Chính Thức. Toàn bộ Lịch Sử & Bài Đã Lưu sẽ được bảo lưu vĩnh viễn!`, 'success');
+      window.app.showToast(`🎉 Đăng ký thành công! Chào mừng ${user.fullname} đến với Học Viên Chính Thức.`, 'success');
       window.app.router.navigate('upload');
     } catch (err) {
       window.app.showToast(err.message, 'error');

@@ -115,37 +115,21 @@
               <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Tạo Tài Khoản Thường</button>
             </form>
 
-            <!-- Official Account Register Form (Telegram OTP Verified) -->
-            <form id="form-official-register" style="display: none;" onsubmit="app.views.auth.startOfficialRegistration(event)">
+            <form id="official-register-form" onsubmit="app.views.auth.handleOfficialRegister(event)">
               <div class="section-header" style="margin-bottom: 1rem;">
                 <h2 class="section-title" style="font-size: 1.4rem; color: #34d399;">🌟 Tạo Tài Khoản Chính Thức</h2>
-                <p class="section-subtitle">Xác thực mã 6 số qua Telegram để bảo lưu vĩnh viễn Lịch Sử & Đề Đã Lưu</p>
+                <p class="section-subtitle">Xác thực qua tài khoản Telegram để bảo lưu vĩnh viễn Lịch Sử & Đề Đã Lưu</p>
               </div>
 
               <div class="telegram-banner-box">
                 <div style="font-weight: 700; font-size: 0.9rem; color: #38bdf8; margin-bottom: 0.35rem;">
-                  🚀 Lợi Ích Của Tài Khoản Chính Thức:
+                  🚀 Hướng Dẫn Liên Kết Xác Thực:
                 </div>
-                <ul style="font-size: 0.82rem; color: var(--text-muted); padding-left: 1.2rem; line-height: 1.5;">
-                  <li><strong>Không bị mất dữ liệu:</strong> Lịch Sử & Đề Đã Lưu được lưu trữ vĩnh viễn (Chế độ khách sẽ mất sạch khi F5/refresh).</li>
-                  <li><strong>Mã OTP 6 số:</strong> Được gửi trực tiếp về cuộc trò chuyện Telegram của bạn.</li>
+                <ul style="font-size: 0.82rem; color: var(--text-muted); padding-left: 1.2rem; line-height: 1.5; margin-bottom: 0.5rem;">
+                  <li>Điền <strong>Email</strong> và <strong>Mật khẩu</strong> của bạn.</li>
+                  <li>Click nút <strong>Log in with Telegram</strong> bên dưới để xác thực tài khoản.</li>
+                  <li>Hệ thống sẽ tự động điền Tên & Telegram ID để bạn hoàn tất đăng ký.</li>
                 </ul>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="off-fullname">Họ và Tên Học Viên</label>
-                <input type="text" id="off-fullname" class="form-input" placeholder="VD: Nguyễn Văn Học Viên" required>
-              </div>
-
-              <div style="display: flex; gap: 0.75rem;">
-                <div class="form-group" style="flex: 1;">
-                  <label class="form-label" for="off-username">Tên Đăng Nhập</label>
-                  <input type="text" id="off-username" class="form-input" placeholder="username123" required>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                  <label class="form-label" for="off-phone">Số Điện Thoại</label>
-                  <input type="tel" id="off-phone" class="form-input" placeholder="0901234567" required>
-                </div>
               </div>
 
               <div class="form-group">
@@ -154,20 +138,38 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="off-telegram">Tài Khoản Telegram (@Username hoặc Chat ID)</label>
-                <input type="text" id="off-telegram" class="form-input" placeholder="@ten_telegram_cua_ban" required>
-                <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.3rem;">
-                  💡 Mã xác thực 6 số sẽ được gửi về Telegram này.
-                </span>
-              </div>
-
-              <div class="form-group">
                 <label class="form-label" for="off-password">Mật Khẩu</label>
                 <input type="password" id="off-password" class="form-input" placeholder="Tối thiểu 6 ký tự..." required>
               </div>
 
-              <button type="submit" id="btn-submit-official-req" class="btn btn-success" style="width: 100%; margin-top: 0.75rem; padding: 0.75rem; font-weight: 700;">
-                🚀 Xác Nhận & Nhận Mã OTP Qua Telegram
+              <!-- Telegram Widget Container -->
+              <div class="form-group" style="text-align: center; margin: 1.25rem 0;">
+                <label class="form-label" style="text-align: left; display: block;">Liên Kết Xác Thực Telegram</label>
+                <div id="telegram-widget-container" style="min-height: 40px; display: flex; justify-content: center; align-items: center; background: rgba(30, 41, 59, 0.4); border-radius: var(--radius-md); border: 1px dashed var(--glass-border); padding: 0.75rem;">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);" id="telegram-widget-placeholder">Đang tải nút xác thực Telegram...</span>
+                </div>
+                <span id="telegram-widget-warning" style="font-size: 0.78rem; color: var(--accent-rose); display: none; margin-top: 0.5rem;">
+                  ⚠️ Nếu nút xác thực không hiển thị, vui lòng tắt trình chặn quảng cáo (Adblocker/Brave Shield) cho trang web này.
+                </span>
+              </div>
+
+              <!-- Pre-filled fields post Telegram Auth -->
+              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label" for="off-fullname">Họ và Tên Học Viên</label>
+                  <input type="text" id="off-fullname" class="form-input" placeholder="Chờ xác thực..." required readonly style="opacity: 0.75;">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label" for="off-telegram">Tên Telegram</label>
+                  <input type="text" id="off-telegram" class="form-input" placeholder="Chờ xác thực..." required readonly style="opacity: 0.75;">
+                </div>
+              </div>
+
+              <!-- Hidden Telegram ID input -->
+              <input type="hidden" id="off-telegram-id">
+
+              <button type="submit" id="btn-submit-official-req" class="btn btn-success" style="width: 100%; margin-top: 0.75rem; padding: 0.75rem; font-weight: 700;" disabled>
+                🔒 Vui Lòng Xác Thực Telegram Trước
               </button>
             </form>
           </div>
@@ -604,6 +606,33 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
               🚪 Đăng Xuất Tài Khoản
             </button>
           </div>
+
+          <!-- Telegram Bot Configuration Card (2 cols) -->
+          <div class="glass-card" style="grid-column: span 2;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              🤖 Cấu Hình Telegram Bot (Quản Trị Viên)
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Cấu hình Telegram Bot tùy chỉnh làm cổng xác thực tài khoản chính thức.
+            </p>
+            <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem; font-size: 0.82rem; line-height: 1.5; color: var(--text-muted);">
+              💡 <strong>Hướng dẫn thiết lập Bot:</strong><br>
+              1. Tạo Bot mới trên Telegram qua <a href="https://t.me/BotFather" target="_blank" style="color: var(--primary); text-decoration: underline;">@BotFather</a> để lấy Username.<br>
+              2. Gửi lệnh <code>/setdomain</code> cho @BotFather, chọn Bot của bạn và điền địa chỉ tên miền chạy web (ví dụ: <code>http://localhost:8000</code> hoặc domain Vercel của bạn) để cho phép hiển thị Widget đăng nhập.
+            </div>
+            
+            <form id="telegram-bot-form" onsubmit="app.views.profile.saveBotConfig(event)">
+              <div class="form-group">
+                <label class="form-label" for="bot-username">Telegram Bot Username (Không bao gồm kí tự @)</label>
+                <input type="text" id="bot-username" class="form-input" placeholder="Ví dụ: EurusQuizBot" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                💾 Lưu Tên Bot
+              </button>
+            </form>
+          </div>
+
         </div>
       </section>
 
@@ -722,51 +751,7 @@ Lời giải: Theo chuẩn ES6 JavaScript, từ khóa const (constant) dùng đ�
     </div>
   </div>
 
-  <!-- Telegram Bot OTP Confirmation Modal Overlay -->
-  <div class="modal-overlay" id="telegram-otp-modal">
-    <div class="modal-content" style="max-width: 480px; text-align: center;">
-      <div class="modal-header" style="justify-content: center; position: relative;">
-        <div>
-          <div style="font-size: 2.2rem; margin-bottom: 0.25rem;">📱 🔐</div>
-          <h2 style="font-size: 1.35rem; font-family: var(--font-heading); color: #38bdf8;">Nhập Mã Xác Thực Telegram</h2>
-          <span style="font-size: 0.82rem; color: var(--text-muted);">Mã xác nhận 6 số đã được gửi tới cuộc trò chuyện Telegram của bạn</span>
-        </div>
-        <button class="btn btn-secondary btn-icon-only" onclick="app.views.auth.closeOtpModal()" style="position: absolute; right: 0; top: 0; padding: 0.4rem 0.8rem; font-size: 1.2rem;">✖</button>
-      </div>
 
-      <div class="modal-body" style="padding: 1.25rem 0.5rem;">
-        <div style="background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.3); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem; font-size: 0.85rem; color: #bae6fd;">
-          🤖 <strong>Telegram Bot:</strong> <a id="telegram-bot-direct-link" href="https://t.me/EurusQuizBot" target="_blank" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">@EurusQuizBot</a><br>
-          <span style="font-size: 0.78rem; color: var(--text-muted);">Nếu chưa thấy mã, hãy mở Telegram và nhấn <strong>/start</strong> với Bot.</span>
-        </div>
-
-        <div style="margin: 0.5rem 0;">
-          <label class="form-label" style="font-size: 0.88rem; color: var(--text-main); font-weight: 600;">Nhập mã OTP 6 chữ số:</label>
-          <div class="otp-input-group">
-            <input type="text" id="otp-digit-1" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric" autofocus>
-            <input type="text" id="otp-digit-2" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="otp-digit-3" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="otp-digit-4" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="otp-digit-5" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" id="otp-digit-6" class="otp-digit" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-          </div>
-        </div>
-
-        <!-- Simulated preview code for instant demo ease -->
-        <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">
-          Mã xác thực nhanh: <code id="demo-otp-preview" style="color: #34d399; font-weight: 700; font-size: 0.95rem;">------</code>
-        </div>
-
-        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-          ⏱️ Mã hết hạn sau: <span id="otp-countdown-text" style="color: #fbbf24; font-weight: 700;">03:00</span>
-        </div>
-
-        <button type="button" class="btn btn-success" style="width: 100%; padding: 0.85rem; font-size: 1rem; font-weight: 700;" onclick="app.views.auth.submitOtpVerification(event)">
-          ✔ Hoàn Tất Đăng Ký Chính Thức
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>

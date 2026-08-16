@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     fullname TEXT NOT NULL,
     phone TEXT,
     telegram_user TEXT,
+    telegram_id TEXT UNIQUE,
     is_official BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );

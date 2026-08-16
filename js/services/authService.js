@@ -48,7 +48,7 @@ class AuthService {
     }
   }
 
-  register({ username, email, password, fullname, isOfficial = false, telegramUser = '', phone = '' }) {
+  register({ username, email, password, fullname, isOfficial = false, telegramUser = '', phone = '', telegramId = '' }) {
     const users = this.getAllUsers();
     const cleanUsername = username.trim().toLowerCase();
     const cleanEmail = email.trim().toLowerCase();
@@ -66,6 +66,7 @@ class AuthService {
       fullname: fullname.trim(),
       phone: (phone || '').trim(),
       telegramUser: (telegramUser || '').trim(),
+      telegramId: (telegramId || '').trim(),
       isOfficial: !!isOfficial,
       passwordHash: this.hashPassword(password),
       createdAt: new Date().toISOString()
@@ -118,6 +119,7 @@ class AuthService {
       fullname: user.fullname,
       phone: user.phone || '',
       telegramUser: user.telegramUser || '',
+      telegramId: user.telegramId || '',
       isOfficial: !!user.isOfficial,
       loginAt: new Date().toISOString()
     };
@@ -128,7 +130,7 @@ class AuthService {
     localStorage.removeItem(this.STORAGE_KEY_SESSION);
   }
 
-  updateProfile({ fullname, email, phone = '', telegramUser = '' }) {
+  updateProfile({ fullname, email, phone = '', telegramUser = '', telegramId = '' }) {
     const currentUser = this.getCurrentUser();
     if (!currentUser) throw new Error('Vui lòng đăng nhập trước khi cập nhật hồ sơ!');
 
@@ -140,6 +142,7 @@ class AuthService {
       users[userIndex].email = email.trim().toLowerCase();
       if (phone) users[userIndex].phone = phone.trim();
       if (telegramUser) users[userIndex].telegramUser = telegramUser.trim();
+      if (telegramId) users[userIndex].telegramId = telegramId.trim();
       localStorage.setItem(this.STORAGE_KEY_USERS, JSON.stringify(users));
 
       // Update active session
@@ -147,6 +150,7 @@ class AuthService {
       currentUser.email = users[userIndex].email;
       currentUser.phone = users[userIndex].phone;
       currentUser.telegramUser = users[userIndex].telegramUser;
+      currentUser.telegramId = users[userIndex].telegramId;
       localStorage.setItem(this.STORAGE_KEY_SESSION, JSON.stringify(currentUser));
     }
     return currentUser;

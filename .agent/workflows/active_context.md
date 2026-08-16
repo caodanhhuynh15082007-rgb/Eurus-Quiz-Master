@@ -1,10 +1,10 @@
 ---
 status: IDLE
-active_phase: "Phase 2 Completed & Shipped (v3.5 Master Release - Telegram OTP & Storage Partitioning)"
-active_feature: "Phase 3: PDF / Excel Export or Leaderboard (Awaiting User Directive)"
-active_spec: ".agent/specs/SPEC-2.0_ai_quiz_generator.md"
-last_commit: "da46f72"
-last_test_status: "PASS (All 18 System Files Saved & Verified)"
+active_phase: "Phase 2 Completed & Shipped (v3.6 Master Release - Telegram Login Widget Integration)"
+active_feature: "Phase 3: PDF / Excel Report Export for Quiz Results (Awaiting Spec /init)"
+active_spec: ".agent/specs/archive/SPEC-3.0_telegram_integration.md"
+last_commit: "1f7084b"
+last_test_status: "PASS (All 19 System Files Saved & Verified - Manual UI Verification Scheduled)"
 memory_links:
   architecture: ".agent/docs/ARCHITECTURE.md"
   features: ".agent/docs/FEATURES.md"
@@ -38,11 +38,22 @@ Project Root/
 
 ## 📌 Active Checkpoint Log
 
-### Session 2026-08-15 — Release v3.5 (`/ship`)
-- **Status:** IDLE (Telegram Bot OTP 6-Digit Verification & Guest vs Official Storage Partitioning Shipped).
-- **Git Commit:** [`f05f02e`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
+### Session 2026-08-15 — Release v3.5 & Supabase Integration
+- **Status:** IDLE (Telegram Bot OTP 6-Digit Verification, Storage Partitioning, and Supabase Cloud DB Shipped).
+- **Git Commit:** [`eaaa9ec`](file:///c:/Users/ACER/OneDrive/Documents/spec_coding/.git)
 - **Features Added:**
   - `telegramAuthService.js`: Random 6-digit OTP generator with 180s timer & Telegram Bot API REST gateway.
   - Storage Partitioning: Guest mode uses `sessionStorage` (100% reset on F5), Official mode uses `localStorage` (permanent retention).
   - 3-Tab Auth View: Login / Regular Register / 🌟 Official Registration.
   - 6-Digit OTP Modal with Auto-jump focus and live countdown timer.
+  - `supabaseClient.js`: Supabase JS SDK client integration with direct cloud syncing of quiz attempt results to `quiz_attempts` table.
+  - `schema.sql`: SQL DDL database schema for tables `users`, `quiz_attempts`, `saved_quizzes`, and `question_feedbacks` with Row Level Security (RLS) policies.
+
+### Session 2026-08-16 — Release v3.6 & Secure Telegram Widget
+- **Status:** IDLE (Official Telegram Login Widget integration shipped, replacing old OTP code verification).
+- **Features Added:**
+  - `telegramAuthService.js`: Simplified to manage only public Bot Username configuration.
+  - `index.html`: Added `<div id="telegram-widget-container">` and Brave Shield/AdBlock warning; cleaned up old OTP modals and phone fields.
+  - `authView.js`: Dynamically loads the Telegram Login Widget script, maps global callback for authentication payload, auto-populates registration inputs, and registers official users with `telegramId`.
+  - `authService.js`: Supports registration and persistence of permanent `telegramId`.
+  - `schema.sql`: Added unique column `telegram_id` to the `users` table.

@@ -149,3 +149,14 @@ This file records all completed session checkpoints, archived feature specs, and
 - **Milestone:** Upgraded framework to v2.4 (Auto-Pilot Hybrid Engine).
 - **Features Implemented:** Integrated Eurus Vault's frictionless auto-hydration, natural triggers (`start`, `continue`, `save`), 3 Project Lifecycle Adapters, and end-to-end auto-commit/push pipeline.
 - **Verification Status:** Pass 100% integrity audit.
+
+---
+
+### 2026-08-16 — Phase 2.13: Secure Telegram Login Widget Integration (`SPEC-3.0_telegram_integration.md`)
+- **Milestone:** Released v3.6. Replaced old insecure Telegram Bot OTP sending API with the official Telegram Login Widget client-side integration.
+- **Features Implemented:**
+  1. **Zero-Token Exposure:** Removed all Bot API Tokens from client-side JS (`telegramAuthService.js`, `profileView.js`, `index.html`) and LocalStorage, keeping authentication 100% secure.
+  2. **Telegram Login Widget Loader** (`authView.js`, `index.html`): Dynamically loads and injects the official Telegram login button with automatic detection for Brave Shield or AdBlock blocks.
+  3. **One-Click Account Verification:** Intercepts secure Telegram login widget callback payload (`id`, `username`, `first_name`) to auto-fill registration fields and map student accounts to a verified Telegram account.
+  4. **Database Identity Enforcement** (`authService.js`, `schema.sql`): Added `telegram_id` uniqueness constraint to users table schema in Supabase database to prevent duplicate registration exploitation.
+- **Verification Status:** Pass (SHA256: `839e00f38f5a45326e40a9de87e248b0f018a8f728dc165fddc4cc650ff1edb`).
